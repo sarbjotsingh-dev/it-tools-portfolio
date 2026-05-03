@@ -4,7 +4,7 @@ A comprehensive multi-region new hire management dashboard with credential track
 
 ## Features
 
-- Track all new hire credentials (M365, Five9, ILOAN, FusionID) in one place
+- Track all new hire credentials (M365, Five9, ILOAN, ExternalID) in one place
 - **Analytics bar** — total hires, this week, pending M365 setup, pending welcome emails
 - **Department breakdown** chips with visual bars
 - Bulk CSV import with per-row validation and inline editing before save

@@ -1,6 +1,6 @@
 ﻿(function() {
     const LIST_GUID = "YOUR-RECOGNITION-LIST-GUID";
-    const IT_SITE_URL = "https://your-tenant.sharepoint.com/sites/IT-HelpDesk";
+    const IT_SITE_URL = "https://your-tenant.sharepoint.com/sites/YOUR-SITE-NAME";
     const IT_LIST_GUID = "YOUR-NEWHIRES-LIST-GUID";
     // Prefer current site URL from SharePoint context to avoid cross-site issues in modern pages
     const SITE_URL = (window.COMPANY_SITE_URL) || (window._spPageContextInfo && window._spPageContextInfo.webAbsoluteUrl)
@@ -672,7 +672,7 @@ Lisa Davis,Legazpi,Quality Assessor,Assessment,11234567890,lisa.davis@company.co
             filename = `Assessment_Template_${today}.csv`;
         } else if (templateType === 'collections') {
             csvContent = `Name,Location,Position,Department,Phone Number,External Email,Hire Date,Manager
-Robert Johnson,Little Newton,Account Manager,Collections,11234567890,robert.johnson@company.com,${today},manager@company.com
+Robert Johnson,Office Location,Account Manager,Collections,11234567890,robert.johnson@company.com,${today},manager@company.com
 Maria Garcia,Region-PH3,Collections Specialist,Collections,11234567890,maria.garcia@company.com,${today},manager@company.com
 James Wilson,Region-IN2,Collections Agent,Collections,11234567890,james.wilson@company.com,${today},manager@company.com`;
             filename = `Collections_Template_${today}.csv`;
@@ -1580,7 +1580,7 @@ James Wilson,Region-IN2,Collections Agent,Collections,11234567890,james.wilson@c
         const position = (normRow["jobtitle"] || normRow["job title"] || normRow["position"] || "").trim();
         const department = (normRow["department"] || "").trim();
         const rawPhone = (normRow["phonenumber"] || normRow["phone number"] || "").trim();
-        const externalEmail = (normRow["externalemail"] || normRow["external email"] || normRow["bpoemail"] || normRow["fusionemail"] || "").trim();
+        const externalEmail = (normRow["externalemail"] || normRow["external email"] || normRow["externalid"] || normRow["externalid"] || "").trim();
         const hireDate = (normRow["hiredate"] || normRow["hire date"] || "").trim();
         const manager = (normRow["manager"] || "").trim();
         
@@ -1595,9 +1595,9 @@ James Wilson,Region-IN2,Collections Agent,Collections,11234567890,james.wilson@c
             Position: position,
             PhoneNumber: formattedPhone,
             M365Username_x002f_Computerusern: generateEmailUsername(firstName, lastName),
-            Windows_x002f_M365Password: "Light22@@",
+            Windows_x002f_M365Password: "YOUR_DEFAULT_PASSWORD",
             Five9Username: `${firstName.toLowerCase().replace(/[^a-z]/g, '')}.${lastName.toLowerCase().replace(/[^a-z]/g, '')}`,
-            Five9Password: "Light22@@",
+            Five9Password: "YOUR_DEFAULT_PASSWORD",
             Five9StationID: "0",
             ILOANID: generateIloanId(firstName, lastName),
             HireDate: formatDateForSharePoint(hireDate),
@@ -2381,7 +2381,7 @@ James Wilson,Region-IN2,Collections Agent,Collections,11234567890,james.wilson@c
             return;
         }
 
-        const headers = ['First Name', 'Last Name', 'Email', 'PIMS Name', 'iLoan User ID', 'Five9 Name', 'Hire Date'];
+        const headers = ['First Name', 'Last Name', 'Email', 'System Name', 'iLoan User ID', 'Five9 Name', 'Hire Date'];
         let csvContent = headers.join(',') + '\n';
 
         selectedRecords.forEach(record => {
@@ -2433,7 +2433,7 @@ James Wilson,Region-IN2,Collections Agent,Collections,11234567890,james.wilson@c
             Location: record.Location || "",
             Manager: record.Manager || "",
             PhoneNumber: record.PhoneNumber || "",
-            Fusionid_x0028_Philliphinesonly_: record.ExternalEmail || ""
+            ExternalSystemId: record.ExternalEmail || ""
         };
     }
 
@@ -2444,7 +2444,7 @@ James Wilson,Region-IN2,Collections Agent,Collections,11234567890,james.wilson@c
             return;
         }
 
-        showStatus(`Connecting to IT-HelpDesk site...`, "info");
+        showStatus(`Connecting to your SharePoint site...`, "info");
 
         // Get a fresh digest for the IT site (different site = different digest)
         let itDigest = "";
@@ -2458,7 +2458,7 @@ James Wilson,Region-IN2,Collections Agent,Collections,11234567890,james.wilson@c
             const digestData = await digestResp.json();
             itDigest = digestData.FormDigestValue;
         } catch (e) {
-            showStatus("Could not connect to IT-HelpDesk site. Check that you have access to that site.", "error");
+            showStatus("Could not connect to your SharePoint site. Check that you have access to that site.", "error");
             return;
         }
 

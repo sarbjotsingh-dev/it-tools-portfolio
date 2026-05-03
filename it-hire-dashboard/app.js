@@ -1,7 +1,7 @@
 ﻿
       // CONFIG
       const siteUrl =
-        "https://your-tenant.sharepoint.com/sites/IT-HelpDesk";
+        "https://your-tenant.sharepoint.com/sites/YOUR-SITE-NAME";
       const listGuid = "YOUR-NEWHIRES-LIST-GUID";
       const THEME_KEY = "nhThemePreference";
 
@@ -47,7 +47,7 @@
         stationAssigned: "StationAssigned_x003f_",
         unifi: "Unifi",
         profileCreated: "ProfileCreated_x003f_",
-        fusionId: "Fusionid_x0028_Philliphinesonly_",
+        externalId: "ExternalSystemId",
       };
 
       // ==================== ENHANCED CSV HEADER NORMALIZATION ====================
@@ -61,8 +61,8 @@
           // Full Name mappings - handles "Name", "FULL NAME", "Full Name", etc.
           "fullname": ["fullname", "name", "fullname", "fullname", "fullname"],
           
-          // FusionID mappings - handles "External Email", "BPO Email", "Fusion Email", etc.
-          "fusionid": ["fusionid", "bpoemail", "externalemail", "fusionemail", "bpoemail", "bpomail", "fusionidRegion-PHonly"],
+          // ExternalID mappings - handles "External Email", "External ID", "External ID", etc.
+          "externalid": ["externalid", "externalid", "externalemail", "externalid", "externalid", "externalid", "externalidRegion-PHonly"],
           
           // First Name mappings
           "firstname": ["firstname", "firstname", "firstname"],
@@ -515,7 +515,7 @@
           const five9Pwd       = record[fields.five9Password]   || '';
           const stationId      = record[fields.five9StationId]  || '';
           const iloan          = record[fields.iloan]           || '';
-          const fusionId       = record[fields.fusionId]        || '';
+          const externalId       = record[fields.externalId]        || '';
           const dept           = record[fields.department]      || '';
           const position       = record[fields.position]        || '';
           const hireDate       = formatDateForDisplay(record[fields.hireDate]);
@@ -542,7 +542,7 @@
             <td>${escapeHtml(five9Pwd)}</td>
             <td>${escapeHtml(stationId)}</td>
             <td>${escapeHtml(iloan)}</td>
-            <td>${escapeHtml(fusionId)}</td>
+            <td>${escapeHtml(externalId)}</td>
             <td>${escapeHtml(phone)}</td>
             <td>${itBadge(profileCreated)}</td>
             <td>${itBadge(unifi)}</td>
@@ -694,7 +694,7 @@
           formatDateForDisplay(r[fields.hireDate]) || '',
           r[fields.location]        || '',
           r[fields.manager]         || '',
-          r[fields.fusionId]        || '',
+          r[fields.externalId]        || '',
         ]);
         const esc = v => `"${String(v).replace(/"/g, '""')}"`;
         return [headers.map(esc).join(',')]
@@ -732,7 +732,7 @@
         if (records.length === 0) { showStatus('Please select records to download LM Profile CSV.', 'error'); return; }
 
         const esc = v => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
-        const headers = ['First Name', 'Last Name', 'Email', 'PIMS Name', 'iLoan User ID', 'Five9 Name', 'Hire Date'];
+        const headers = ['First Name', 'Last Name', 'Email', 'System Name', 'iLoan User ID', 'Five9 Name', 'Hire Date'];
         const rows = records.map(r => [
           r[fields.firstName]  || '',
           r[fields.lastName]   || '',
@@ -856,16 +856,16 @@
         
         if (type === 'csr') {
           filename = `CSR_Template_${today}.csv`;
-          csvContent = `Full name,First name,Last name,M365 Username/Computer username,Windows/ M365 Password,Five9 Username,Five9 Password,Five9 Station ID,ILOAN ID,Department,Position,Hire Date,Location,Manager,Phone number,FusionID (Region-specific field)
-"John Doe","John","Doe","john.doe@company.com","Light22@@","john.doe","Light22@@","CSR001","ILOAN123456","Customer Service","Customer Service Representative","${today}","Main Office","Jane Smith","+1 (555) 123-4567","BPO-JohnDoe"
-"Jane Smith","Jane","Smith","jane.smith@company.com","Light22@@","jane.smith","Light22@@","CSR002","ILOAN789012","Customer Service","Customer Service Representative","${today}","Main Office","John Manager","+1 (555) 987-6543","BPO-JaneSmith"`;
+          csvContent = `Full name,First name,Last name,M365 Username/Computer username,Windows/ M365 Password,Five9 Username,Five9 Password,Five9 Station ID,ILOAN ID,Department,Position,Hire Date,Location,Manager,Phone number,ExternalID (Region-specific field)
+"John Doe","John","Doe","john.doe@company.com","YOUR_DEFAULT_PASSWORD","john.doe","YOUR_DEFAULT_PASSWORD","CSR001","ILOAN123456","Customer Service","Customer Service Representative","${today}","Main Office","Jane Smith","+1 (555) 123-4567","BPO-JohnDoe"
+"Jane Smith","Jane","Smith","jane.smith@company.com","YOUR_DEFAULT_PASSWORD","jane.smith","YOUR_DEFAULT_PASSWORD","CSR002","ILOAN789012","Customer Service","Customer Service Representative","${today}","Main Office","John Manager","+1 (555) 987-6543","BPO-JaneSmith"`;
           
           showStatus(`CSR template downloaded. Department: Customer Service, Title: Customer Service Representative`, "success");
         } else if (type === 'assessment') {
           filename = `Assessment_Template_${today}.csv`;
-          csvContent = `Full name,First name,Last name,M365 Username/Computer username,Windows/ M365 Password,Five9 Username,Five9 Password,Five9 Station ID,ILOAN ID,Department,Position,Hire Date,Location,Manager,Phone number,FusionID (Region-specific field)
-"Alex Johnson","Alex","Johnson","alex.johnson@company.com","Light22@@","alex.johnson","Light22@@","ASSESS001","ILOAN345678","Assessment","Assessor","${today}","Assessment Center","Michael Brown","+1 (555) 234-5678","BPO-AlexJohnson"
-"Sarah Williams","Sarah","Williams","sarah.williams@company.com","Light22@@","sarah.williams","Light22@@","ASSESS002","ILOAN901234","Assessment","Assessor","${today}","Assessment Center","Michael Brown","+1 (555) 876-5432","BPO-SarahWilliams"`;
+          csvContent = `Full name,First name,Last name,M365 Username/Computer username,Windows/ M365 Password,Five9 Username,Five9 Password,Five9 Station ID,ILOAN ID,Department,Position,Hire Date,Location,Manager,Phone number,ExternalID (Region-specific field)
+"Alex Johnson","Alex","Johnson","alex.johnson@company.com","YOUR_DEFAULT_PASSWORD","alex.johnson","YOUR_DEFAULT_PASSWORD","ASSESS001","ILOAN345678","Assessment","Assessor","${today}","Assessment Center","Michael Brown","+1 (555) 234-5678","BPO-AlexJohnson"
+"Sarah Williams","Sarah","Williams","sarah.williams@company.com","YOUR_DEFAULT_PASSWORD","sarah.williams","YOUR_DEFAULT_PASSWORD","ASSESS002","ILOAN901234","Assessment","Assessor","${today}","Assessment Center","Michael Brown","+1 (555) 876-5432","BPO-SarahWilliams"`;
           
           showStatus(`Assessment template downloaded. Department: Assessment, Title: Assessor`, "success");
         }
@@ -957,10 +957,10 @@
           }
         });
         
-        // FusionID input formatting on blur
-        document.getElementById('f_fusionId').addEventListener('blur', function(e) {
+        // ExternalID input formatting on blur
+        document.getElementById('f_externalId').addEventListener('blur', function(e) {
           const value = e.target.value.trim();
-          // Optional: Add any specific formatting for FusionID here
+          // Optional: Add any specific formatting for ExternalID here
         });
       }
 
@@ -1058,7 +1058,7 @@
 
         const search = searchRaw.replace(/'/g, "''");
 
-        const filter = `$filter=substringof('${search}', ${fields.username}) or substringof('${search}', ${fields.fullName}) or substringof('${search}', ${fields.iloan}) or substringof('${search}', ${fields.five9}) or substringof('${search}', ${fields.fusionId})`;
+        const filter = `$filter=substringof('${search}', ${fields.username}) or substringof('${search}', ${fields.fullName}) or substringof('${search}', ${fields.iloan}) or substringof('${search}', ${fields.five9}) or substringof('${search}', ${fields.externalId})`;
 
         const selectFields = ["Id"].concat(Object.values(fields));
         const endpoint = `${siteUrl}/_api/web/lists(guid'${listGuid}')/items?${filter}&$top=1&$select=${selectFields.join(
@@ -1120,7 +1120,7 @@
         document.getElementById("f_location").value =
           u[fields.location] || "";
         document.getElementById("f_manager").value = u[fields.manager] || "";
-        document.getElementById("f_fusionId").value = u[fields.fusionId] || "";
+        document.getElementById("f_externalId").value = u[fields.externalId] || "";
 
         if (u[fields.hireDate]) {
           const formattedDate = formatDateForInput(u[fields.hireDate]);
@@ -1169,7 +1169,7 @@
           [fields.position]: document.getElementById("f_position").value.trim(),
           [fields.location]: document.getElementById("f_location").value.trim(),
           [fields.manager]: document.getElementById("f_manager").value.trim(),
-          [fields.fusionId]: document.getElementById("f_fusionId").value.trim(),
+          [fields.externalId]: document.getElementById("f_externalId").value.trim(),
           [fields.hireDate]: hireDateValue,
           [fields.statusUser]: document.getElementById("f_status_user").value,
           [fields.statusEmail]: document.getElementById("f_status_email").value,
@@ -1471,7 +1471,7 @@
 
         const safeQuery = query.replace(/'/g, "''");
 
-        const filter = `$filter=substringof('${safeQuery}', ${fields.username}) or substringof('${safeQuery}', ${fields.fullName}) or substringof('${safeQuery}', ${fields.iloan}) or substringof('${safeQuery}', ${fields.five9}) or substringof('${safeQuery}', ${fields.fusionId})`;
+        const filter = `$filter=substringof('${safeQuery}', ${fields.username}) or substringof('${safeQuery}', ${fields.fullName}) or substringof('${safeQuery}', ${fields.iloan}) or substringof('${safeQuery}', ${fields.five9}) or substringof('${safeQuery}', ${fields.externalId})`;
 
         const selectFields = ["Id"].concat(Object.values(fields));
         const endpoint = `${siteUrl}/_api/web/lists(guid'${listGuid}')/items?${filter}&$top=10&$select=${selectFields.join(
@@ -1518,13 +1518,13 @@
             const username = item[fields.username] || "";
             const iloan = item[fields.iloan] || "";
             const five9 = item[fields.five9] || "";
-            const fusionId = item[fields.fusionId] || "";
+            const externalId = item[fields.externalId] || "";
 
             const metaParts = [];
             if (username) metaParts.push(username);
             if (iloan) metaParts.push("ILOAN: " + iloan);
             if (five9) metaParts.push("Five9: " + five9);
-            if (fusionId) metaParts.push("FusionID: " + fusionId);
+            if (externalId) metaParts.push("ExternalID: " + externalId);
 
             return `
               <div class="search-suggestion-item ${
@@ -1650,7 +1650,7 @@
         const location = get("location");
         const manager = get("manager");
         const phone = get("phonenumber");
-        const fusionId = get("fusionid");
+        const externalId = get("externalid");
 
         const payload = {};
 
@@ -1668,7 +1668,7 @@
         payload[fields.location] = location;
         payload[fields.manager] = manager;
         payload[fields.phone] = formatPhoneNumber(phone);
-        payload[fields.fusionId] = fusionId;
+        payload[fields.externalId] = externalId;
 
         // Parse hire date
         if (hireDateRaw) {
@@ -1685,7 +1685,7 @@
         return payload;
       }
 
-      async function findExistingUserId(username, iloan, five9, fusionId) {
+      async function findExistingUserId(username, iloan, five9, externalId) {
         let filter = "";
         function esc(v) {
           return v.replace(/'/g, "''");
@@ -1697,8 +1697,8 @@
           filter = `${fields.iloan} eq '${esc(iloan)}'`;
         } else if (five9) {
           filter = `${fields.five9} eq '${esc(five9)}'`;
-        } else if (fusionId) {
-          filter = `${fields.fusionId} eq '${esc(fusionId)}'`;
+        } else if (externalId) {
+          filter = `${fields.externalId} eq '${esc(externalId)}'`;
         } else {
           return null;
         }
@@ -1754,13 +1754,13 @@
             const username = payload[fields.username];
             const iloan = payload[fields.iloan];
             const five9 = payload[fields.five9];
-            const fusionId = payload[fields.fusionId];
+            const externalId = payload[fields.externalId];
 
             const existingId = await findExistingUserId(
               username,
               iloan,
               five9,
-              fusionId
+              externalId
             );
 
             csvRows.push({
@@ -1835,7 +1835,7 @@
 												<td>${escapeHtml(r.payload[fields.five9Password] || "")}</td>
 												<td>${escapeHtml(r.payload[fields.five9StationId] || "")}</td>
 												<td>${escapeHtml(r.payload[fields.iloan] || "")}</td>
-												<td>${escapeHtml(r.payload[fields.fusionId] || "")}</td>
+												<td>${escapeHtml(r.payload[fields.externalId] || "")}</td>
 												<td>${escapeHtml(r.payload[fields.department] || "")}</td>
 												<td>${escapeHtml(r.payload[fields.position] || "")}</td>
 												<td>${escapeHtml(formatDateForDisplay(r.payload[fields.hireDate] || ""))}</td>
@@ -1908,8 +1908,8 @@
             )}" ${!r.payload[fields.iloan] ? 'style="border-color: #ff4d4d;"' : ''} />
 											</td>
 											<td>
-												<input class="edit-field" data-index="${i}" data-field="fusionId" value="${escapeHtml(
-              r.payload[fields.fusionId] || ""
+												<input class="edit-field" data-index="${i}" data-field="externalId" value="${escapeHtml(
+              r.payload[fields.externalId] || ""
             )}" />
 											</td>
 											<td>

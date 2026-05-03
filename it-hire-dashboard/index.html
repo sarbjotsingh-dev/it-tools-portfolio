@@ -1221,7 +1221,7 @@
 						<input
               id="nh-search"
               type="text"
-              placeholder="Search by Username / Full Name / ILOAN / Five9 / FusionID"
+              placeholder="Search by Username / Full Name / ILOAN / Five9 / ExternalID"
               autocomplete="off"
             />
 						<button
@@ -1320,8 +1320,8 @@
 							<input type="text" id="f_hiredate" placeholder="MM/DD/YYYY or YYYY-MM-DD" />
 						</div>
 						<div>
-							<label>FusionID (Region-specific field)</label>
-							<input id="f_fusionId" type="text" />
+							<label>ExternalID (Region-specific field)</label>
+							<input id="f_externalId" type="text" />
 						</div>
 					</div>
 					<div
@@ -1384,10 +1384,10 @@
 							<p>
 							<strong>CSR Template:</strong> Department: Customer Service, Title: Customer Service Representative<br>
 							<strong>Assessment Template:</strong> Department: Assessment, Title: Assessor<br>
-              Both templates include pre-filled password pattern: <code>Light22@@</code> as example</p>
+              Both templates include pre-filled password pattern: <code>YOUR_DEFAULT_PASSWORD</code> as example</p>
 							<p>
 							<strong>Expected columns:</strong>
-							<code>Full name, First name, Last name, M365 Username/Computer username, Windows/ M365 Password, Five9 Username, Five9 Password, Five9 Station ID, ILOAN ID, Department, Position, Hire Date, Location, Manager, Phone number, FusionID (Region-specific field)</code>
+							<code>Full name, First name, Last name, M365 Username/Computer username, Windows/ M365 Password, Five9 Username, Five9 Password, Five9 Station ID, ILOAN ID, Department, Position, Hire Date, Location, Manager, Phone number, ExternalID (Region-specific field)</code>
 							<br>
 								<br>
 									<strong>Alternative header names accepted:</strong>
@@ -1396,7 +1396,7 @@
 											<li>
 												<strong>Full Name:</strong> Name, FULL NAME, Full Name</li>
 												<li>
-													<strong>FusionID:</strong> External Email, BPO Email, Fusion Email</li>
+													<strong>ExternalID:</strong> External Email, External ID, External ID</li>
 													<li>
 														<strong>First Name:</strong> First Name, FIRST NAME</li>
 														<li>
@@ -1442,7 +1442,7 @@
               >Full name, First name, Last name, M365 Username/Computer
               username, Windows/ M365 Password, Five9 Username, Five9 Password,
               Five9 Station ID, ILOAN ID, Department, Position, Hire Date,
-              Location, Manager, Phone number, FusionID (Region-specific field)</code
+              Location, Manager, Phone number, ExternalID (Region-specific field)</code
             >
 																<br />
 																<br />
@@ -1450,7 +1450,7 @@
               >Alternative header names accepted:</span
             >
 																<br />
-																<code style="color: #0078d4">BPO Email, External Email, Fusion Email</code> (will be mapped to FusionID)<br>
+																<code style="color: #0078d4">External ID, External Email, External ID</code> (will be mapped to ExternalID)<br>
 																<code style="color: #0078d4">Name</code> (will be mapped to Full Name)<br>
 																<code style="color: #0078d4">Job Title</code> (will be mapped to Position)<br>
 																<code style="color: #0078d4">Standardized Number</code> (will be mapped to Phone Number)
@@ -1482,7 +1482,7 @@
 																				<th>Five9 Pwd</th>
 																				<th>Station ID</th>
 																				<th>ILOAN</th>
-																				<th>FusionID</th>
+																				<th>ExternalID</th>
 																				<th>Dept</th>
 																				<th>Position</th>
 																				<th>Hire Date</th>
@@ -1602,7 +1602,7 @@
 														<th>Five9 Pwd</th>
 														<th>Station ID</th>
 														<th>ILOAN</th>
-														<th>FusionID</th>
+														<th>ExternalID</th>
 														<th>Phone</th>
 														<th>M365 Profile?</th>
 														<th>Unifi?</th>
