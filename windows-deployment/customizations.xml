@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WindowsCustomizations>
+  <PackageConfig xmlns="urn:schemas-Microsoft-com:Windows-ICD-Package-Config.v1.0">
+    <ID>{YOUR-PACKAGE-GUID}</ID>
+    <Name>device-provisioning</Name>
+    <Version>1.1</Version>
+    <OwnerType>OEM</OwnerType>
+    <Rank>0</Rank>
+    <Notes />
+  </PackageConfig>
+  <Settings xmlns="urn:schemas-microsoft-com:windows-provisioning">
+    <Customizations>
+      <Common>
+        <Accounts>
+          <Azure>
+            <!-- Bulk Primary Refresh Token (BPRT) from Entra admin center -->
+            <!-- Generate via: Entra admin > Devices > Bulk enrollment tokens -->
+            <Authority>https://login.microsoftonline.com/common</Authority>
+            <BPRT>YOUR_BULK_ENROLLMENT_TOKEN</BPRT>
+          </Azure>
+          <Users>
+            <User UserName="localadmin">
+              <Password>YOUR_LOCAL_ADMIN_PASSWORD</Password>
+              <UserGroup>Administrators</UserGroup>
+            </User>
+          </Users>
+        </Accounts>
+        <ConnectivityProfiles>
+          <WLAN>
+            <WLANSetting>
+              <!-- Pre-configure corporate WiFi so device connects before Entra enrollment -->
+              <WLANConfig SSID="YOUR_WIFI_SSID">
+                <WLANXmlSettings>
+                  <SecurityKey>YOUR_WIFI_PASSWORD</SecurityKey>
+                  <SecurityType>WPA2-Personal</SecurityType>
+                </WLANXmlSettings>
+              </WLANConfig>
+            </WLANSetting>
+          </WLAN>
+        </ConnectivityProfiles>
+        <DevDetail>
+          <!-- Renames PC using serial number: e.g. OFFICE--A1B2C3D4 -->
+          <DNSComputerName>OFFICE--%SERIAL%</DNSComputerName>
+        </DevDetail>
+        <OOBE>
+          <Desktop>
+            <HideOobe>True</HideOobe>
+          </Desktop>
+        </OOBE>
+        <Policies>
+          <ApplicationManagement>
+            <AllowAllTrustedApps>Yes</AllowAllTrustedApps>
+          </ApplicationManagement>
+        </Policies>
+      </Common>
+    </Customizations>
+  </Settings>
+</WindowsCustomizations>

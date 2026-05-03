@@ -13,6 +13,7 @@ All apps are SharePoint-hosted, vanilla JS + HTML/CSS with no build step.
 | [Headset Tracker](./headset-tracker/) | Equipment inventory & assignment management | HTML, JS |
 | [Onboard / Offboard System](./onboard-offboard-system/) | Employee lifecycle management portal | HTML, JS |
 | [Employee Recognition App](./employee-recognition/) | Peer-to-peer recognition ("High Five") system | JS, SharePoint REST API |
+| [Windows 11 Deployment](./windows-deployment/) | Zero-touch OS install + Entra auto-enrollment via WCD provisioning package | XML, WCD, Entra ID |
 
 ## Skills Demonstrated
 
