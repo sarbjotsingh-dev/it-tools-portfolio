@@ -75,7 +75,7 @@
         }
 
         // ====== SHAREPOINT CONFIGURATION ======
-        const listGuid = "13e0a045-43fe-470e-85ba-36d59027b341";
+        const listGuid = "YOUR-NEWHIRES-LIST-GUID";
         const baseUrl = "https://your-tenant.sharepoint.com";
         const listItemType = "SP.Data.Virtual_x0020_High_x0020_FiveListItem";
 

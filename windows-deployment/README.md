@@ -1,4 +1,4 @@
-# Windows 11 Unattended Deployment + Entra Auto-Enrollment
+﻿# Windows 11 Unattended Deployment + Entra Auto-Enrollment
 
 A zero-touch Windows 11 deployment solution combining an **unattended answer file** with a **WCD provisioning package** — drop it on a USB drive, boot a new PC, and it fully configures itself with no IT interaction.
 

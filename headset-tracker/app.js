@@ -3,7 +3,7 @@
 
 (function() {
     // SharePoint Configuration
-    const LIST_GUID = "5074921e-be56-4d84-9750-bfbed8375e8c";
+    const LIST_GUID = "YOUR-NEWHIRES-LIST-GUID";
     const SITE_URL = "https://your-tenant.sharepoint.com";
     
     // Hardcoded Admin Credentials

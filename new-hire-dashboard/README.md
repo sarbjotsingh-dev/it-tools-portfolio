@@ -1,4 +1,4 @@
-# New Hire Dashboard
+﻿# New Hire Dashboard
 
 A comprehensive multi-region new hire management dashboard with credential tracking, bulk import, analytics, and automated email workflows.
 
@@ -23,7 +23,7 @@ A comprehensive multi-region new hire management dashboard with credential track
 
 ## Regional Variants
 
-This repo includes a Bengaluru (India) variant with region-specific fields and column mappings.
+This repo includes a Region-IN (Region-IN) variant with region-specific fields and column mappings.
 
 ## Setup
 

@@ -1,4 +1,4 @@
-# Headset Tracker
+﻿# Headset Tracker
 
 An equipment inventory management app for tracking headset assignments across employees and office locations.
 

@@ -2,7 +2,7 @@
       // CONFIG
       const siteUrl =
         "https://your-tenant.sharepoint.com/sites/IT-HelpDesk";
-      const listGuid = "cdaec9e6-00e2-441c-8e69-e1d80fe8d148";
+      const listGuid = "YOUR-NEWHIRES-LIST-GUID";
       const THEME_KEY = "nhThemePreference";
 
       let loadedItemId = null;
@@ -62,7 +62,7 @@
           "fullname": ["fullname", "name", "fullname", "fullname", "fullname"],
           
           // FusionID mappings - handles "External Email", "BPO Email", "Fusion Email", etc.
-          "fusionid": ["fusionid", "bpoemail", "externalemail", "fusionemail", "bpoemail", "bpomail", "fusionidphillipinesonly"],
+          "fusionid": ["fusionid", "bpoemail", "externalemail", "fusionemail", "bpoemail", "bpomail", "fusionidRegion-PHonly"],
           
           // First Name mappings
           "firstname": ["firstname", "firstname", "firstname"],
@@ -856,14 +856,14 @@
         
         if (type === 'csr') {
           filename = `CSR_Template_${today}.csv`;
-          csvContent = `Full name,First name,Last name,M365 Username/Computer username,Windows/ M365 Password,Five9 Username,Five9 Password,Five9 Station ID,ILOAN ID,Department,Position,Hire Date,Location,Manager,Phone number,FusionID (Phillipines only)
+          csvContent = `Full name,First name,Last name,M365 Username/Computer username,Windows/ M365 Password,Five9 Username,Five9 Password,Five9 Station ID,ILOAN ID,Department,Position,Hire Date,Location,Manager,Phone number,FusionID (Region-specific field)
 "John Doe","John","Doe","john.doe@company.com","Light22@@","john.doe","Light22@@","CSR001","ILOAN123456","Customer Service","Customer Service Representative","${today}","Main Office","Jane Smith","+1 (555) 123-4567","BPO-JohnDoe"
 "Jane Smith","Jane","Smith","jane.smith@company.com","Light22@@","jane.smith","Light22@@","CSR002","ILOAN789012","Customer Service","Customer Service Representative","${today}","Main Office","John Manager","+1 (555) 987-6543","BPO-JaneSmith"`;
           
           showStatus(`CSR template downloaded. Department: Customer Service, Title: Customer Service Representative`, "success");
         } else if (type === 'assessment') {
           filename = `Assessment_Template_${today}.csv`;
-          csvContent = `Full name,First name,Last name,M365 Username/Computer username,Windows/ M365 Password,Five9 Username,Five9 Password,Five9 Station ID,ILOAN ID,Department,Position,Hire Date,Location,Manager,Phone number,FusionID (Phillipines only)
+          csvContent = `Full name,First name,Last name,M365 Username/Computer username,Windows/ M365 Password,Five9 Username,Five9 Password,Five9 Station ID,ILOAN ID,Department,Position,Hire Date,Location,Manager,Phone number,FusionID (Region-specific field)
 "Alex Johnson","Alex","Johnson","alex.johnson@company.com","Light22@@","alex.johnson","Light22@@","ASSESS001","ILOAN345678","Assessment","Assessor","${today}","Assessment Center","Michael Brown","+1 (555) 234-5678","BPO-AlexJohnson"
 "Sarah Williams","Sarah","Williams","sarah.williams@company.com","Light22@@","sarah.williams","Light22@@","ASSESS002","ILOAN901234","Assessment","Assessor","${today}","Assessment Center","Michael Brown","+1 (555) 876-5432","BPO-SarahWilliams"`;
           

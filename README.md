@@ -1,4 +1,4 @@
-# Sarbjot Singh — IT Tools Portfolio
+﻿# Sarbjot Singh — IT Tools Portfolio
 
 Full-stack internal tooling built for large-scale enterprise IT operations.
 All apps are SharePoint-hosted, vanilla JS + HTML/CSS with no build step.

@@ -1,4 +1,4 @@
-# Onboard / Offboard System
+﻿# Onboard / Offboard System
 
 A unified employee lifecycle management portal for IT teams — handles both new hire onboarding and departure offboarding workflows in a single interface.
 

@@ -1,4 +1,4 @@
-# Employee Recognition App ("High Five")
+﻿# Employee Recognition App ("High Five")
 
 A peer-to-peer employee recognition system where staff can send appreciation messages ("High Fives") to colleagues, visible company-wide.
 
@@ -7,7 +7,7 @@ A peer-to-peer employee recognition system where staff can send appreciation mes
 - Send a "High Five" to any employee with a custom message and category (Teamwork, Innovation, etc.)
 - Company-wide recognition feed showing recent High Fives
 - Leaderboard — most recognized employees this month
-- Region-specific variants (Canada, India) with localized employee lists
+- Region-specific variants (Region-CA, Region-IN) with localized employee lists
 - SharePoint-backed persistence
 
 ## Tech Stack
@@ -18,7 +18,7 @@ A peer-to-peer employee recognition system where staff can send appreciation mes
 
 ## Files
 
-- `app.js` — core logic (US/Philippines variant)
+- `app.js` — core logic (US/Region-PH variant)
 - Additional regional variants available for other office locations
 
 ## Setup

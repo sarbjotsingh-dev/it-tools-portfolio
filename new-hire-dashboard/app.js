@@ -1,7 +1,7 @@
 ﻿(function() {
-    const LIST_GUID = "b9bd0633-a636-42c3-a8ba-dbb301b98f6d";
+    const LIST_GUID = "YOUR-RECOGNITION-LIST-GUID";
     const IT_SITE_URL = "https://your-tenant.sharepoint.com/sites/IT-HelpDesk";
-    const IT_LIST_GUID = "cdaec9e6-00e2-441c-8e69-e1d80fe8d148";
+    const IT_LIST_GUID = "YOUR-NEWHIRES-LIST-GUID";
     // Prefer current site URL from SharePoint context to avoid cross-site issues in modern pages
     const SITE_URL = (window.COMPANY_SITE_URL) || (window._spPageContextInfo && window._spPageContextInfo.webAbsoluteUrl)
         || (function() {
@@ -46,12 +46,12 @@
         'big newton': '+1',
         'little newton': '+1',
         'north vancouver': '+1',
-        'bengaluru': '+91',
-        'mumbai': '+91',
-        'cebu': '+63',
+        'Region-IN': '+91',
+        'Region-IN2': '+91',
+        'Region-PH2': '+63',
         'legazpi': '+63',
-        'silang': '+63',
-        'cape town': '+27',
+        'Region-PH3': '+63',
+        'Region-SA': '+27',
         'capetown': '+27'
     };
 
@@ -106,23 +106,23 @@
         if (countryCode === "+1") {
             if (digitsOnly.length === 10) {
                 if (digitsOnly[0] === '0' || digitsOnly[0] === '1') {
-                    return { valid: false, message: `US/Canada area code cannot start with "${digitsOnly[0]}" — got "${rawPhone}". Enter 10 digits (no country code) or 11 digits starting with 1` };
+                    return { valid: false, message: `US/Region-CA area code cannot start with "${digitsOnly[0]}" — got "${rawPhone}". Enter 10 digits (no country code) or 11 digits starting with 1` };
                 }
                 return { valid: true };
             } else if (digitsOnly.length === 11 && digitsOnly[0] === '1') {
                 if (digitsOnly[1] === '0' || digitsOnly[1] === '1') {
-                    return { valid: false, message: `US/Canada area code cannot start with "${digitsOnly[1]}" — got "${rawPhone}"` };
+                    return { valid: false, message: `US/Region-CA area code cannot start with "${digitsOnly[1]}" — got "${rawPhone}"` };
                 }
                 return { valid: true };
             }
-            return { valid: false, message: `US/Canada numbers must be 10 digits or 11 digits with country code 1 — got ${digitsOnly.length} digits for "${rawPhone}"` };
+            return { valid: false, message: `US/Region-CA numbers must be 10 digits or 11 digits with country code 1 — got ${digitsOnly.length} digits for "${rawPhone}"` };
         } else if (countryCode === "+91") {
             if (digitsOnly.length === 10 && ['6','7','8','9'].includes(digitsOnly[0])) return { valid: true };
-            return { valid: false, message: `India numbers must be 10 digits starting with 6–9 — got "${rawPhone}"` };
+            return { valid: false, message: `Region-IN numbers must be 10 digits starting with 6–9 — got "${rawPhone}"` };
         } else if (countryCode === "+63") {
             if (digitsOnly.length === 10 && digitsOnly[0] === '9') return { valid: true }; // +63 stripped: 9XXXXXXXXX
             if (digitsOnly.length === 11 && digitsOnly[0] === '0') return { valid: true }; // local: 09XXXXXXXXX
-            return { valid: false, message: `Philippines numbers must be 10 digits starting with 9 (international, e.g. +63 9XX XXX XXXX) or 11 digits starting with 0 (local, e.g. 09XX XXX XXXX) — got "${rawPhone}"` };
+            return { valid: false, message: `Region-PH numbers must be 10 digits starting with 9 (international, e.g. +63 9XX XXX XXXX) or 11 digits starting with 0 (local, e.g. 09XX XXX XXXX) — got "${rawPhone}"` };
         } else if (countryCode === "+27") {
             if (digitsOnly.length === 9) return { valid: true };
             if (digitsOnly.length === 10 && digitsOnly[0] === '0') return { valid: true };
@@ -166,12 +166,12 @@
     function isEmailRequired(location) {
         if (!location) return false;
         const locLower = location.toLowerCase();
-        return locLower.includes("cebu") || 
+        return locLower.includes("Region-PH2") || 
                locLower.includes("legazpi") || 
-               locLower.includes("silang") || 
-               locLower.includes("cape town") || 
+               locLower.includes("Region-PH3") || 
+               locLower.includes("Region-SA") || 
                locLower.includes("capetown") || 
-               locLower.includes("mumbai");
+               locLower.includes("Region-IN2");
     }
 
     function formatDateForDisplay(dateString) {
@@ -662,19 +662,19 @@
             csvContent = `Name,Location,Position,Department,Phone Number,External Email,Hire Date,Manager
 John Doe,Big Newton,Customer Service Representative,Customer Service,11234567890,john.doe@company.com,${today},manager@company.com
 Jane Smith,North Vancouver,Customer Service Representative,Customer Service,11234567890,jane.smith@company.com,${today},manager@company.com
-Mike Johnson,Cebu,Tier 1 CSR,Customer Service,11234567890,mike.johnson@company.com,${today},manager@company.com`;
+Mike Johnson,Region-PH2,Tier 1 CSR,Customer Service,11234567890,mike.johnson@company.com,${today},manager@company.com`;
             filename = `Customer_Service_Template_${today}.csv`;
         } else if (templateType === 'assessment') {
             csvContent = `Name,Location,Position,Department,Phone Number,External Email,Hire Date,Manager
 Sarah Williams,North Vancouver,Assessor,Assessment,11234567890,sarah.williams@company.com,${today},manager@company.com
-David Brown,Cape Town,Assessment Specialist,Assessment,11234567890,david.brown@company.com,${today},manager@company.com
+David Brown,Region-SA,Assessment Specialist,Assessment,11234567890,david.brown@company.com,${today},manager@company.com
 Lisa Davis,Legazpi,Quality Assessor,Assessment,11234567890,lisa.davis@company.com,${today},manager@company.com`;
             filename = `Assessment_Template_${today}.csv`;
         } else if (templateType === 'collections') {
             csvContent = `Name,Location,Position,Department,Phone Number,External Email,Hire Date,Manager
 Robert Johnson,Little Newton,Account Manager,Collections,11234567890,robert.johnson@company.com,${today},manager@company.com
-Maria Garcia,Silang,Collections Specialist,Collections,11234567890,maria.garcia@company.com,${today},manager@company.com
-James Wilson,Mumbai,Collections Agent,Collections,11234567890,james.wilson@company.com,${today},manager@company.com`;
+Maria Garcia,Region-PH3,Collections Specialist,Collections,11234567890,maria.garcia@company.com,${today},manager@company.com
+James Wilson,Region-IN2,Collections Agent,Collections,11234567890,james.wilson@company.com,${today},manager@company.com`;
             filename = `Collections_Template_${today}.csv`;
         }
         

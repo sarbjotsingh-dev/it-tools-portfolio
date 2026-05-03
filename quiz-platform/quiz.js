@@ -13,12 +13,12 @@
 // ─────────────────────────────────────────────────────────────
 
 const _L = {
-  templates : '02580f36-2b1f-4377-bd50-789733759321',
-  quizzes   : 'e7918f3d-5140-424f-b63f-6212d9be3fe1',
-  questions : 'cace8e80-7cfd-47c6-8d22-c718dcc0ffe1',
-  attempts  : 'bad8100a-5212-4af2-915d-0acd461cdcff',
-  links     : '9743a1a1-1863-4884-9add-bea0ca1e3555',
-  agents    : 'b9bd0633-a636-42c3-a8ba-dbb301b98f6d'
+  templates : 'YOUR-QUIZ-TEMPLATES-LIST-GUID',
+  quizzes   : 'YOUR-QUIZZES-LIST-GUID',
+  questions : 'YOUR-QUESTIONS-LIST-GUID',
+  attempts  : 'YOUR-ATTEMPTS-LIST-GUID',
+  links     : 'YOUR-LINKS-LIST-GUID',
+  agents    : 'YOUR-RECOGNITION-LIST-GUID'
 };
 
 const PASS_SCORE = 80;   // % required to pass

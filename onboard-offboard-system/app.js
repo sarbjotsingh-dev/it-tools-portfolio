@@ -1,6 +1,6 @@
 ﻿(function() {
             // SharePoint configuration for Onboarding/Offboarding list
-            const LIST_GUID = "7eb07060-b310-4f16-b38e-6fe0949fd2b0";
+            const LIST_GUID = "YOUR-RECORDS-LIST-GUID";
             const SITE_URL = "https://your-tenant.sharepoint.com";
             
             // Internal column names mapping

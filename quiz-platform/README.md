@@ -1,4 +1,4 @@
-# Employee Quiz Platform
+﻿# Employee Quiz Platform
 
 A two-view quiz system — an **Admin dashboard** to create and manage quizzes, and an **Agent view** for employees to take them. Results are stored in SharePoint lists.
 

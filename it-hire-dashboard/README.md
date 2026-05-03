@@ -1,4 +1,4 @@
-# IT New Hire Dashboard
+﻿# IT New Hire Dashboard
 
 A full-featured internal tool for IT teams to onboard new employees — track credentials, system access, and setup status across every hire.
 
