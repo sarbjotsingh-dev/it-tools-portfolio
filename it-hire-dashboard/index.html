@@ -1,0 +1,1676 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>IT New Hire – Dashboard (Fluent UI + Search & Dark Mode)</title>
+		<style>
+      :root {
+        --fluent-bg: #f3f2f1;
+        --fluent-card-bg: #ffffff;
+        --fluent-border-subtle: #e1dfdd;
+        --fluent-border-strong: #c8c6c4;
+        --fluent-primary: #0078d4;
+        --fluent-primary-dark: #005a9e;
+        --fluent-primary-soft: #eff6fc;
+        --fluent-text: #201f1e;
+        --fluent-text-subtle: #605e5c;
+        --fluent-danger: #a4262c;
+        --fluent-success: #107c10;
+        --fluent-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        --fluent-radius-lg: 10px;
+        --fluent-radius-md: 6px;
+        --fluent-radius-pill: 999px;
+        --fluent-transition-fast: 0.15s ease-out;
+      }
+
+      /* Dark theme overrides */
+      html[data-theme="dark"] {
+        --fluent-bg: #111827;
+        --fluent-card-bg: #1f2933;
+        --fluent-border-subtle: #374151;
+        --fluent-border-strong: #4b5563;
+        --fluent-primary: #60a5fa;
+        --fluent-primary-dark: #2563eb;
+        --fluent-primary-soft: #1e293b;
+        --fluent-text: #f9fafb;
+        --fluent-text-subtle: #d1d5db;
+        --fluent-danger: #fca5a5;
+        --fluent-success: #6ee7b7;
+        --fluent-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
+          sans-serif;
+        background: radial-gradient(
+          circle at top left,
+          #f9fafb 0,
+          #f3f2f1 40%,
+          #e5e5e5 100%
+        );
+        padding: 24px;
+        color: var(--fluent-text);
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      html[data-theme="dark"] body {
+        background: radial-gradient(
+          circle at top left,
+          #020617 0,
+          #020617 40%,
+          #020617 100%
+        );
+      }
+
+      .header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        gap: 8px;
+      }
+
+      h2 {
+        font-size: 22px;
+        font-weight: 650;
+        margin: 0;
+        color: #323130;
+        letter-spacing: 0.02em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      html[data-theme="dark"] h2 {
+        color: #e5e7eb;
+      }
+
+      h2::before {
+        content: "";
+        width: 6px;
+        height: 22px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--fluent-primary), #45a9ff);
+      }
+
+      .theme-toggle-btn {
+        padding: 6px 12px;
+        border-radius: var(--fluent-radius-pill);
+        border: 1px solid var(--fluent-border-subtle);
+        background: rgba(255, 255, 255, 0.85);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--fluent-text-subtle);
+        transition: background-color var(--fluent-transition-fast),
+          box-shadow var(--fluent-transition-fast),
+          transform var(--fluent-transition-fast),
+          color var(--fluent-transition-fast);
+      }
+
+      html[data-theme="dark"] .theme-toggle-btn {
+        background: #111827;
+        border-color: #4b5563;
+        color: #e5e7eb;
+      }
+
+      .theme-toggle-btn:hover {
+        background: var(--fluent-primary-soft);
+        color: var(--fluent-primary-dark);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transform: translateY(-0.5px);
+      }
+
+      .theme-toggle-icon {
+        font-size: 14px;
+      }
+
+      .tab-buttons {
+        margin-bottom: 12px;
+        display: inline-flex;
+        padding: 3px;
+        border-radius: var(--fluent-radius-pill);
+        background: rgba(255, 255, 255, 0.7);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--fluent-border-subtle);
+        flex-wrap: wrap;
+      }
+
+      html[data-theme="dark"] .tab-buttons {
+        background: #020617;
+        border-color: #374151;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+      }
+
+      .tab-buttons button {
+        padding: 7px 16px;
+        margin-right: 0;
+        border-radius: var(--fluent-radius-pill);
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--fluent-text-subtle);
+        position: relative;
+        transition: background-color var(--fluent-transition-fast),
+          color var(--fluent-transition-fast),
+          transform var(--fluent-transition-fast);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .tab-buttons button:hover {
+        background: rgba(0, 0, 0, 0.03);
+        transform: translateY(-0.5px);
+      }
+
+      html[data-theme="dark"] .tab-buttons button:hover {
+        background: rgba(248, 250, 252, 0.04);
+      }
+
+      .tab-buttons button.active {
+        background: var(--fluent-primary);
+        color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+      }
+
+      .nh-container {
+        background: var(--fluent-card-bg);
+        padding: 20px 22px 18px;
+        border-radius: var(--fluent-radius-lg);
+        max-width: 1400px;
+        margin: 0 auto;
+        box-shadow: var(--fluent-shadow);
+        border: 1px solid rgba(0, 0, 0, 0.02);
+      }
+
+      html[data-theme="dark"] .nh-container {
+        border-color: #111827;
+      }
+
+      .row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .row > div {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .row.three-col > div {
+        flex: 0 0 calc(33.33% - 8px);
+      }
+
+      .row.two-col > div {
+        flex: 0 0 calc(50% - 6px);
+      }
+
+      label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--fluent-text-subtle);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      input[type="text"],
+      input[type="password"],
+      input[type="date"],
+      select,
+      .filter-input {
+        width: 100%;
+        padding: 7px 10px;
+        border: 1px solid var(--fluent-border-strong);
+        border-radius: var(--fluent-radius-md);
+        font-size: 13px;
+        box-sizing: border-box;
+        transition: border-color var(--fluent-transition-fast),
+          box-shadow var(--fluent-transition-fast),
+          background-color var(--fluent-transition-fast),
+          transform var(--fluent-transition-fast);
+        background-color: #ffffff;
+        color: var(--fluent-text);
+      }
+
+      html[data-theme="dark"] input[type="text"],
+      html[data-theme="dark"] input[type="password"],
+      html[data-theme="dark"] input[type="date"],
+      html[data-theme="dark"] select,
+      html[data-theme="dark"] .filter-input {
+        background-color: #020617;
+        border-color: #4b5563;
+        color: #e5e7eb;
+      }
+
+      input::placeholder {
+        color: #a19f9d;
+      }
+
+      html[data-theme="dark"] input::placeholder {
+        color: #6b7280;
+      }
+
+      input:focus,
+      select:focus,
+      .filter-input:focus {
+        border-color: var(--fluent-primary);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.3);
+        background-color: #fbfdff;
+        transform: translateY(-0.5px);
+      }
+
+      html[data-theme="dark"] input:focus,
+      html[data-theme="dark"] select:focus,
+      html[data-theme="dark"] .filter-input:focus {
+        box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.45);
+        background-color: #020617;
+      }
+
+      .search-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 16px;
+        padding: 10px 12px 10px;
+        border-radius: var(--fluent-radius-md);
+        border: 1px solid var(--fluent-border-subtle);
+        background: linear-gradient(135deg, #fafafa, #f5f8fc);
+        align-items: center;
+      }
+
+      html[data-theme="dark"] .search-row {
+        background: radial-gradient(circle, #020617, #020617);
+        border-color: #374151;
+      }
+
+      .search-input-wrapper {
+        position: relative;
+        flex-grow: 1;
+      }
+
+      .search-input-wrapper input {
+        padding-right: 30px;
+      }
+
+      .search-clear-btn {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 14px;
+        color: #a19f9d;
+        padding: 0;
+      }
+
+      .search-clear-btn:hover {
+        color: #666666;
+      }
+
+      html[data-theme="dark"] .search-clear-btn {
+        color: #6b7280;
+      }
+
+      html[data-theme="dark"] .search-clear-btn:hover {
+        color: #e5e7eb;
+      }
+
+      .search-suggestions {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background: var(--fluent-card-bg);
+        border-radius: var(--fluent-radius-md);
+        border: 1px solid var(--fluent-border-subtle);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+        z-index: 50;
+        max-height: 260px;
+        overflow-y: auto;
+      }
+
+      .search-suggestion-item {
+        padding: 7px 10px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        font-size: 12px;
+      }
+
+      .search-suggestion-item:hover,
+      .search-suggestion-item.active {
+        background: var(--fluent-primary-soft);
+      }
+
+      .search-suggestion-title {
+        font-weight: 600;
+        color: var(--fluent-text);
+      }
+
+      .search-suggestion-meta {
+        font-size: 11px;
+        color: var(--fluent-text-subtle);
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid var(--fluent-border-subtle);
+      }
+
+      button {
+        padding: 7px 15px;
+        border: none;
+        border-radius: var(--fluent-radius-pill);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: background-color var(--fluent-transition-fast),
+          box-shadow var(--fluent-transition-fast),
+          transform var(--fluent-transition-fast),
+          color var(--fluent-transition-fast);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--fluent-primary), #45a9ff);
+        color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, var(--fluent-primary-dark), #2f89e5);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary {
+        background: #ffffff;
+        color: var(--fluent-text);
+        border: 1px solid var(--fluent-border-strong);
+      }
+
+      .btn-secondary:hover {
+        background: var(--fluent-primary-soft);
+        color: var(--fluent-primary-dark);
+        border-color: var(--fluent-primary);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        transform: translateY(-1px);
+      }
+
+      html[data-theme="dark"] .btn-secondary {
+        background: #020617;
+        color: #e5e7eb;
+        border-color: #4b5563;
+      }
+
+      html[data-theme="dark"] .btn-secondary:hover {
+        background: #111827;
+      }
+
+      .btn-template {
+        background: linear-gradient(135deg, #10b981, #34d399);
+        color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      }
+
+      .btn-template:hover {
+        background: linear-gradient(135deg, #059669, #10b981);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+        transform: translateY(-1px);
+      }
+
+      .btn-refresh {
+        background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      }
+
+      .btn-refresh:hover {
+        background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+        transform: translateY(-1px);
+      }
+
+      /* Status Box */
+      .status-box {
+        padding: 10px 12px;
+        border-radius: var(--fluent-radius-md);
+        margin-top: 14px;
+        font-size: 13px;
+        font-weight: 500;
+        display: none;
+        border: 1px solid transparent;
+      }
+
+      .status-box.success {
+        background: #dff6dd;
+        color: var(--fluent-success);
+        border-color: #9ad29a;
+      }
+
+      .status-box.error {
+        background: #fde7e9;
+        color: var(--fluent-danger);
+        border-color: #f3b0b3;
+      }
+
+      html[data-theme="dark"] .status-box.success {
+        background: #064e3b;
+        border-color: #059669;
+        color: #bbf7d0;
+      }
+
+      html[data-theme="dark"] .status-box.error {
+        background: #7f1d1d;
+        border-color: #f87171;
+        color: #fee2e2;
+      }
+
+      /* CSV styles */
+      .csv-section {
+        padding: 6px 0 0;
+      }
+
+      #csvFile {
+        border: 1px dashed var(--fluent-border-strong);
+        padding: 6px 9px;
+        border-radius: var(--fluent-radius-md);
+        background: #faf9f8;
+        font-size: 13px;
+        color: var(--fluent-text);
+      }
+
+      #csvFile:hover {
+        border-color: var(--fluent-primary);
+        background: #f3f2f1;
+      }
+
+      html[data-theme="dark"] #csvFile {
+        background: #020617;
+        border-color: #4b5563;
+        color: #e5e7eb;
+      }
+
+      html[data-theme="dark"] #csvFile:hover {
+        border-color: #60a5fa;
+      }
+
+      .table-container {
+        max-height: 400px;
+        overflow: auto;
+        border: 1px solid var(--fluent-border-subtle);
+        border-radius: var(--fluent-radius-md);
+        margin-top: 10px;
+        background: #ffffff;
+        position: relative;
+      }
+
+      html[data-theme="dark"] .table-container {
+        background: #020617;
+        border-color: #4b5563;
+      }
+
+      .data-table {
+        border-collapse: collapse;
+        font-size: 12px;
+        min-width: 100%;
+        table-layout: auto;
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 8px 10px;
+        border-bottom: 1px solid #f3f2f1;
+        text-align: left;
+        white-space: nowrap;
+      }
+
+      .data-table th {
+        background: linear-gradient(180deg, #f8f9fb, #f3f2f1);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        font-weight: 600;
+        color: var(--fluent-text-subtle);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      }
+
+      /* Lock first column (Name) */
+      .data-table th:first-child,
+      .data-table td:first-child {
+        position: sticky;
+        left: 0;
+        background: inherit;
+        z-index: 20;
+      }
+
+      .data-table th:first-child {
+        background: linear-gradient(180deg, #f8f9fb, #f3f2f1);
+        z-index: 30;
+      }
+
+      .data-table td:first-child {
+        background: var(--fluent-card-bg);
+        font-weight: 600;
+      }
+
+      html[data-theme="dark"] .data-table th {
+        background: #020617;
+        border-bottom-color: #374151;
+      }
+
+      html[data-theme="dark"] .data-table td {
+        border-bottom-color: #111827;
+        color: var(--fluent-text);
+      }
+
+      html[data-theme="dark"] .data-table td:first-child {
+        background: #020617;
+      }
+
+      /* Sticky Full Name column (2nd) */
+      .data-table th:nth-child(2),
+      .data-table td:nth-child(2) {
+        position: sticky;
+        left: 56px;
+        background: inherit;
+        z-index: 15;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.07);
+      }
+
+      .data-table th:nth-child(2) {
+        background: linear-gradient(180deg, #f8f9fb, #f3f2f1);
+        z-index: 25;
+      }
+
+      .data-table td:nth-child(2) {
+        background: var(--fluent-card-bg);
+      }
+
+      html[data-theme="dark"] .data-table th:nth-child(2) {
+        background: #020617;
+      }
+
+      html[data-theme="dark"] .data-table td:nth-child(2) {
+        background: #020617;
+      }
+
+      .data-table tr:nth-child(even) {
+        background-color: #fcfcfc;
+      }
+
+      .data-table tr:hover {
+        background-color: #f5f8fd;
+      }
+
+      html[data-theme="dark"] .data-table tr:nth-child(even) {
+        background-color: #020617;
+      }
+
+      html[data-theme="dark"] .data-table tr:hover {
+        background-color: #111827;
+      }
+
+      .data-table input[type="checkbox"] {
+        margin: 0;
+        padding: 0;
+        transform: scale(1.1);
+        cursor: pointer;
+      }
+
+      /* Inline edit row styling */
+      .data-table .edit-row {
+        background-color: #e6f2ff !important;
+      }
+
+      html[data-theme="dark"] .data-table .edit-row {
+        background-color: #1d283a !important;
+      }
+
+      .data-table .edit-row input {
+        padding: 4px 6px;
+        font-size: 12px;
+      }
+
+      #csvLog {
+        background: #111827;
+        color: #e5e7eb;
+        padding: 8px 10px;
+        border-radius: var(--fluent-radius-md);
+        font-family: Consolas, monospace;
+        font-size: 11px;
+        max-height: 150px;
+        overflow-y: auto;
+        margin-top: 10px;
+        border: 1px solid #1f2933;
+      }
+
+      #csvLog::before {
+        content: "Import Log";
+        display: block;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #9ca3af;
+        margin-bottom: 4px;
+      }
+
+      .missing-critical {
+        background-color: #ffe6e6 !important;
+        border: 1px solid #ff4d4d !important;
+      }
+
+      .missing-field {
+        background-color: #fffbe6 !important;
+      }
+
+      html[data-theme="dark"] .missing-critical {
+        background-color: #7f1d1d !important;
+        border-color: #f87171 !important;
+      }
+
+      html[data-theme="dark"] .missing-field {
+        background-color: #3b2f1a !important;
+      }
+
+      .template-section {
+        background: var(--fluent-primary-soft);
+        border: 1px solid var(--fluent-border-subtle);
+        border-radius: var(--fluent-radius-md);
+        padding: 12px 15px;
+        margin-bottom: 16px;
+      }
+
+      .template-section h3 {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+        color: var(--fluent-text);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .template-section h3::before {
+        content: "📋";
+        font-size: 14px;
+      }
+
+      .template-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .template-info {
+        font-size: 12px;
+        color: var(--fluent-text-subtle);
+        margin-top: 8px;
+        line-height: 1.4;
+      }
+
+      .template-info code {
+        background: rgba(0, 0, 0, 0.05);
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-family: Consolas, monospace;
+        font-size: 11px;
+        color: var(--fluent-primary);
+      }
+
+      html[data-theme="dark"] .template-info code {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Record View Styles */
+      .record-view-section {
+        padding: 10px 0;
+      }
+
+      .filters-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: var(--fluent-primary-soft);
+        border-radius: var(--fluent-radius-md);
+        border: 1px solid var(--fluent-border-subtle);
+        flex-wrap: wrap;
+      }
+
+      .filter-group {
+        flex: 1;
+        min-width: 150px;
+      }
+
+      .filter-group label {
+        margin-bottom: 5px;
+        font-size: 11px;
+      }
+
+      .record-count {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        background: var(--fluent-primary-soft);
+        border-radius: var(--fluent-radius-md);
+        display: inline-block;
+      }
+
+      .edit-link {
+        color: var(--fluent-primary);
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 3px 8px;
+        border-radius: var(--fluent-radius-pill);
+        background: var(--fluent-primary-soft);
+        font-size: 11px;
+      }
+
+      .edit-link:hover {
+        background: var(--fluent-primary);
+        color: #ffffff;
+      }
+
+      .loading-spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid var(--fluent-border-subtle);
+        border-top-color: var(--fluent-primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 8px;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      /* ===== IT Stats Bar ===== */
+      .it-stats-bar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+        padding: 12px 14px;
+        background: var(--fluent-card-bg);
+        border-radius: var(--fluent-radius-md);
+        border: 1px solid var(--fluent-border-subtle);
+        align-items: stretch;
+      }
+
+      html[data-theme="dark"] .it-stats-bar {
+        border-color: #374151;
+      }
+
+      .it-stat-chip {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 8px 14px;
+        border-radius: var(--fluent-radius-md);
+        background: var(--fluent-primary-soft);
+        border: 1px solid rgba(0,120,212,0.12);
+        min-width: 78px;
+        flex: 1;
+      }
+
+      html[data-theme="dark"] .it-stat-chip {
+        background: #111827;
+        border-color: #1e3a5f;
+      }
+
+      .it-stat-label {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--fluent-text-subtle);
+        margin-bottom: 4px;
+        text-align: center;
+      }
+
+      .it-stat-value {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--fluent-primary);
+        line-height: 1.1;
+      }
+
+      .it-stat-sub {
+        font-size: 10px;
+        color: var(--fluent-text-subtle);
+        margin-top: 3px;
+        text-align: center;
+      }
+
+      .it-stat-bar {
+        width: 100%;
+        height: 3px;
+        background: var(--fluent-border-subtle);
+        border-radius: 2px;
+        margin-top: 5px;
+        overflow: hidden;
+      }
+
+      .it-stat-bar-fill {
+        height: 100%;
+        background: var(--fluent-primary);
+        border-radius: 2px;
+        transition: width 0.4s ease;
+      }
+
+      .it-stat-chip.chip-success .it-stat-value { color: var(--fluent-success); }
+      .it-stat-chip.chip-success .it-stat-bar-fill { background: var(--fluent-success); }
+      .it-stat-chip.chip-warn .it-stat-value { color: #d97706; }
+      .it-stat-chip.chip-warn .it-stat-bar-fill { background: #d97706; }
+      .it-stat-chip.chip-cyan .it-stat-value { color: #0891b2; }
+      .it-stat-chip.chip-cyan .it-stat-bar-fill { background: #0891b2; }
+      .it-stat-chip.chip-purple .it-stat-value { color: #8b5cf6; }
+      .it-stat-chip.chip-purple .it-stat-bar-fill { background: #8b5cf6; }
+
+      /* ===== Action Bar ===== */
+      .record-action-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background: linear-gradient(135deg, #eff6fc, #e8f3fc);
+        border: 1px solid rgba(0,120,212,0.3);
+        border-radius: var(--fluent-radius-md);
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+        animation: actionBarIn 0.2s ease-out;
+      }
+
+      html[data-theme="dark"] .record-action-bar {
+        background: linear-gradient(135deg, #1e293b, #172036);
+        border-color: rgba(96,165,250,0.3);
+      }
+
+      @keyframes actionBarIn {
+        from { opacity: 0; transform: translateY(-6px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .selection-count {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--fluent-primary);
+        min-width: 90px;
+        white-space: nowrap;
+      }
+
+      .btn-action {
+        padding: 5px 12px;
+        border: 1px solid var(--fluent-border-subtle);
+        border-radius: var(--fluent-radius-md);
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 500;
+        background: var(--fluent-card-bg);
+        color: var(--fluent-text);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        transition: background var(--fluent-transition-fast),
+                    border-color var(--fluent-transition-fast),
+                    color var(--fluent-transition-fast),
+                    box-shadow var(--fluent-transition-fast);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+      }
+
+      .btn-action:hover {
+        background: var(--fluent-primary-soft);
+        border-color: var(--fluent-primary);
+        color: var(--fluent-primary);
+        box-shadow: 0 2px 6px rgba(0,120,212,0.12);
+      }
+
+      html[data-theme="dark"] .btn-action {
+        background: #1f2933;
+        border-color: #374151;
+        color: #e5e7eb;
+      }
+
+      html[data-theme="dark"] .btn-action:hover {
+        background: #1e293b;
+        border-color: #60a5fa;
+        color: #60a5fa;
+      }
+
+      .btn-action-delete { color: var(--fluent-danger); border-color: rgba(164,38,44,0.3); margin-left: auto; }
+      .btn-action-delete:hover { background: #fde7e9; border-color: var(--fluent-danger); color: var(--fluent-danger); box-shadow: 0 2px 6px rgba(164,38,44,0.12); }
+
+      html[data-theme="dark"] .btn-action-delete { color: #fca5a5; border-color: rgba(252,165,165,0.3); }
+      html[data-theme="dark"] .btn-action-delete:hover { background: #7f1d1d; border-color: #fca5a5; color: #fca5a5; }
+      /* ===== IT Status Badges ===== */
+      .it-badge {
+        display: inline-block;
+        padding: 2px 7px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+      }
+
+      .it-badge-yes {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+      }
+
+      .it-badge-no {
+        background: #f1f5f9;
+        color: #64748b;
+        border: 1px solid #e2e8f0;
+      }
+
+      html[data-theme="dark"] .it-badge-yes {
+        background: #14532d;
+        color: #86efac;
+        border-color: #166534;
+      }
+
+      html[data-theme="dark"] .it-badge-no {
+        background: #1e293b;
+        color: #94a3b8;
+        border-color: #334155;
+      }
+
+      /* ===== Delete Confirmation Modal ===== */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 200;
+        display: none;
+      }
+
+      .modal-overlay.visible { display: block; }
+
+      .delete-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--fluent-card-bg);
+        border-radius: var(--fluent-radius-lg);
+        border: 1px solid var(--fluent-border-subtle);
+        box-shadow: 0 20px 48px rgba(0,0,0,0.28);
+        padding: 24px 28px;
+        z-index: 201;
+        min-width: 320px;
+        max-width: 420px;
+        display: none;
+      }
+
+      .delete-modal.visible { display: block; }
+
+      .delete-modal h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+        color: var(--fluent-danger);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .delete-modal p {
+        font-size: 13px;
+        color: var(--fluent-text-subtle);
+        margin: 0 0 20px 0;
+        line-height: 1.5;
+      }
+
+      .delete-modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+
+      .btn-confirm-delete {
+        background: linear-gradient(135deg,#ef4444,#f87171);
+        color: #fff;
+        padding: 8px 18px;
+        border: none;
+        border-radius: var(--fluent-radius-pill);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .btn-confirm-delete:hover { background: linear-gradient(135deg,#dc2626,#ef4444); }
+
+      .btn-cancel-delete {
+        background: var(--fluent-card-bg);
+        color: var(--fluent-text);
+        padding: 8px 18px;
+        border: 1px solid var(--fluent-border-strong);
+        border-radius: var(--fluent-radius-pill);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .btn-cancel-delete:hover { background: var(--fluent-primary-soft); }
+
+
+      /* ===== Department Breakdown ===== */
+      .it-dept-breakdown {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        flex: 1;
+        align-items: center;
+      }
+
+      .it-dept-chip {
+        display: flex;
+        flex-direction: column;
+        padding: 6px 12px;
+        background: var(--fluent-primary-soft);
+        border: 1px solid rgba(0,120,212,0.15);
+        border-radius: var(--fluent-radius-md);
+        min-width: 80px;
+        gap: 2px;
+      }
+
+      html[data-theme="dark"] .it-dept-chip {
+        background: #111827;
+        border-color: #1e3a5f;
+      }
+
+      .it-dept-name {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--fluent-text-subtle);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 120px;
+      }
+
+      .it-dept-count {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--fluent-primary);
+        line-height: 1.1;
+      }
+
+      .it-dept-bar {
+        width: 100%;
+        height: 3px;
+        background: var(--fluent-border-subtle);
+        border-radius: 2px;
+        overflow: hidden;
+        margin-top: 2px;
+      }
+
+      .it-dept-bar-fill {
+        height: 100%;
+        background: var(--fluent-primary);
+        border-radius: 2px;
+        transition: width 0.4s ease;
+      }
+
+      @media (max-width: 900px) {
+        body {
+          padding: 12px;
+        }
+        .nh-container {
+          padding: 16px;
+          border-radius: 0;
+          box-shadow: none;
+          border-left: none;
+          border-right: none;
+        }
+        .row {
+          flex-direction: column;
+          gap: 4px;
+        }
+        .row.three-col > div,
+        .row.two-col > div {
+          flex: 1 1 100%;
+        }
+        .search-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .button-group {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .button-group button {
+          width: 100%;
+          justify-content: center;
+        }
+        .tab-buttons {
+          width: 100%;
+          justify-content: space-between;
+        }
+        .tab-buttons button {
+          flex: 1;
+          justify-content: center;
+          text-align: center;
+        }
+        .template-buttons {
+          flex-direction: column;
+        }
+        .filters-row {
+          flex-direction: column;
+          gap: 10px;
+        }
+        .filter-group {
+          width: 100%;
+        }
+      }
+    </style>
+	</head>
+	<body>
+		<div class="nh-container">
+			<div class="header-bar">
+				<h2>IT New Hire – Dashboard</h2>
+				<button id="themeToggle" class="theme-toggle-btn">
+					<span class="theme-toggle-icon">🌙</span>
+					<span class="theme-toggle-text">Dark mode</span>
+				</button>
+			</div>
+			<div class="tab-buttons">
+				<button id="btn-tab-single" class="active">
+          Single Entry
+        </button>
+				<button id="btn-tab-csv">
+          Bulk Upload (CSV)
+        </button>
+				<button id="btn-tab-record">
+          Record View
+        </button>
+			</div>
+			<div id="tab-single">
+				<div class="search-row">
+					<div class="search-input-wrapper">
+						<input
+              id="nh-search"
+              type="text"
+              placeholder="Search by Username / Full Name / ILOAN / Five9 / FusionID"
+              autocomplete="off"
+            />
+						<button
+              type="button"
+              id="searchClearBtn"
+              class="search-clear-btn"
+              title="Clear search"
+            >
+              ✕
+            </button>
+						<div
+              id="nh-search-suggestions"
+              class="search-suggestions"
+              style="display: none"
+            >
+						</div>
+					</div>
+					<button id="loadUserBtn" class="btn-secondary">
+            Load User
+          </button>
+				</div>
+				<div>
+					<div class="row two-col">
+						<div>
+							<label>Full Name</label>
+							<input id="f_fullName" type="text" />
+						</div>
+						<div>
+							<label>M365 Username</label>
+							<input id="f_username" type="text" />
+						</div>
+					</div>
+					<div class="row two-col">
+						<div>
+							<label>First Name</label>
+							<input id="f_firstName" type="text" />
+						</div>
+						<div>
+							<label>Last Name</label>
+							<input id="f_lastName" type="text" />
+						</div>
+					</div>
+					<div class="row two-col">
+						<div>
+							<label>Windows / M365 Password</label>
+							<input id="f_winPwd" type="text" />
+						</div>
+						<div>
+							<label>ILOAN ID</label>
+							<input id="f_iloan" type="text" />
+						</div>
+					</div>
+					<div class="row two-col">
+						<div>
+							<label>Five9 Username</label>
+							<input id="f_five9" type="text" />
+						</div>
+						<div>
+							<label>Five9 Password</label>
+							<input id="f_five9Pwd" type="text" />
+						</div>
+					</div>
+					<div class="row two-col">
+						<div>
+							<label>Five9 Station ID</label>
+							<input id="f_five9Station" type="text" />
+						</div>
+						<div>
+							<label>Phone Number</label>
+							<input id="f_phone" type="text" placeholder="+15551234567" />
+						</div>
+					</div>
+					<div class="row two-col">
+						<div>
+							<label>Department</label>
+							<input id="f_department" type="text" />
+						</div>
+						<div>
+							<label>Position</label>
+							<input id="f_position" type="text" />
+						</div>
+					</div>
+					<div class="row two-col">
+						<div>
+							<label>Location</label>
+							<input id="f_location" type="text" />
+						</div>
+						<div>
+							<label>Manager</label>
+							<input id="f_manager" type="text" />
+						</div>
+					</div>
+					<div class="row two-col">
+						<div>
+							<label>Hire Date</label>
+							<input type="text" id="f_hiredate" placeholder="MM/DD/YYYY or YYYY-MM-DD" />
+						</div>
+						<div>
+							<label>FusionID (Phillipines only)</label>
+							<input id="f_fusionId" type="text" />
+						</div>
+					</div>
+					<div
+            class="row three-col"
+            style="margin-top: 20px; border-top: 1px solid #e0e0e0; padding-top: 15px"
+          >
+						<div>
+							<label>User Created?</label>
+							<select id="f_status_user">
+							</select>
+						</div>
+						<div>
+							<label>Email Sent?</label>
+							<select id="f_status_email">
+							</select>
+						</div>
+						<div>
+							<label>Manager Assigned?</label>
+							<select id="f_status_manager">
+							</select>
+						</div>
+					</div>
+					<div class="row three-col">
+						<div>
+							<label>Unifi?</label>
+							<select id="f_unifi">
+							</select>
+						</div>
+						<div>
+							<label>Station Assigned?</label>
+							<select id="f_station_assigned">
+							</select>
+						</div>
+						<div>
+						</div>
+					</div>
+				</div>
+				<div class="button-group">
+					<button id="saveNewHireBtn" class="btn-primary">
+            Save New Hire
+          </button>
+					<button id="updateHireBtn" class="btn-secondary" style="display:none;">
+            Update Existing
+          </button>
+				</div>
+			</div>
+			<div id="tab-csv" style="display: none">
+				<div class="csv-section">
+					<div class="template-section">
+						<h3>Download CSV Templates</h3>
+						<div class="template-buttons">
+							<button id="csrTemplateBtn" class="btn-template">
+                📥 Download CSR Template
+              </button>
+							<button id="assessmentTemplateBtn" class="btn-template">
+                📥 Download Assessment Template
+              </button>
+						</div>
+						<div class="template-info">
+							<p>
+							<strong>CSR Template:</strong> Department: Customer Service, Title: Customer Service Representative<br>
+							<strong>Assessment Template:</strong> Department: Assessment, Title: Assessor<br>
+              Both templates include pre-filled password pattern: <code>Light22@@</code> as example</p>
+							<p>
+							<strong>Expected columns:</strong>
+							<code>Full name, First name, Last name, M365 Username/Computer username, Windows/ M365 Password, Five9 Username, Five9 Password, Five9 Station ID, ILOAN ID, Department, Position, Hire Date, Location, Manager, Phone number, FusionID (Phillipines only)</code>
+							<br>
+								<br>
+									<strong>Alternative header names accepted:</strong>
+									<br>
+										<ul style="margin-top: 5px; font-size: 11px;">
+											<li>
+												<strong>Full Name:</strong> Name, FULL NAME, Full Name</li>
+												<li>
+													<strong>FusionID:</strong> External Email, BPO Email, Fusion Email</li>
+													<li>
+														<strong>First Name:</strong> First Name, FIRST NAME</li>
+														<li>
+															<strong>Last Name:</strong> Last Name, LAST NAME</li>
+															<li>
+																<strong>Phone Number:</strong> Phone Number, Standardized Number</li>
+																<li>
+																	<strong>Position:</strong> Position, Job Title</li>
+																	<li>
+																		<strong>M365 Username:</strong> M365 Username, Computer username</li>
+																		<li>
+																			<strong>M365 Password:</strong> Windows/M365 Password, M365 Password</li>
+																		</ul>
+																	</p>
+																</div>
+															</div>
+															<div class="row two-col" style="gap: 10px; margin-bottom: 5px">
+																<div>
+																	<label>Select CSV File</label>
+																	<input
+                type="file"
+                id="csvFile"
+                accept=".csv"
+                style="width: 100%; margin-top: 0px"
+              />
+																</div>
+															</div>
+															<p
+            style="
+              font-size: 12px;
+              color: #666;
+              padding: 10px;
+              background: #f9f9f9;
+              border-radius: 4px;
+              margin-bottom: 10px;
+            "
+          >
+																<span style="font-weight: 600; color: #333"
+              >Expected columns (header row, case-insensitive):</span
+            >
+																<br />
+																<code style="color: #0078d4"
+              >Full name, First name, Last name, M365 Username/Computer
+              username, Windows/ M365 Password, Five9 Username, Five9 Password,
+              Five9 Station ID, ILOAN ID, Department, Position, Hire Date,
+              Location, Manager, Phone number, FusionID (Phillipines only)</code
+            >
+																<br />
+																<br />
+																<span style="font-weight: 600; color: #333"
+              >Alternative header names accepted:</span
+            >
+																<br />
+																<code style="color: #0078d4">BPO Email, External Email, Fusion Email</code> (will be mapped to FusionID)<br>
+																<code style="color: #0078d4">Name</code> (will be mapped to Full Name)<br>
+																<code style="color: #0078d4">Job Title</code> (will be mapped to Position)<br>
+																<code style="color: #0078d4">Standardized Number</code> (will be mapped to Phone Number)
+				</p>
+																<div
+            id="csvSummary"
+            style="
+              font-size: 13px;
+              font-weight: 600;
+              color: #333;
+              margin-bottom: 5px;
+            "
+          >
+            No rows loaded.
+          </div>
+																<div class="table-container">
+																	<table class="data-table">
+																		<thead>
+																			<tr>
+																				<th>#</th>
+																				<th>Import?</th>
+																				<th>Status</th>
+																				<th>Full Name</th>
+																				<th>First Name</th>
+																				<th>Last Name</th>
+																				<th>Username</th>
+																				<th>Win/M365 Pwd</th>
+																				<th>Five9 User</th>
+																				<th>Five9 Pwd</th>
+																				<th>Station ID</th>
+																				<th>ILOAN</th>
+																				<th>FusionID</th>
+																				<th>Dept</th>
+																				<th>Position</th>
+																				<th>Hire Date</th>
+																				<th>Location</th>
+																				<th>Manager</th>
+																				<th>Phone</th>
+																				<th>Actions</th>
+																			</tr>
+																		</thead>
+																		<tbody id="csvPreviewBody">
+																		</tbody>
+																	</table>
+																</div>
+																<div style="margin-top: 15px">
+																	<button id="importCsvBtn" class="btn-primary">
+              Import Selected Rows
+            </button>
+																</div>
+																<pre id="csvLog">
+																</pre>
+															</div>
+														</div>
+								<div id="tab-record" style="display: none">
+									<div class="record-view-section">
+
+										<!-- IT Analytics Strip -->
+									<div id="itStatsBar" class="it-stats-bar">
+										<div class="it-stat-chip" style="flex:0 0 auto;min-width:90px;">
+											<div class="it-stat-label">Total Hires</div>
+											<div class="it-stat-value" id="stat-total">—</div>
+											<div class="it-stat-sub" id="stat-month">this month: —</div>
+										</div>
+										<div class="it-stat-chip">
+											<div class="it-stat-label">This Week</div>
+											<div class="it-stat-value" id="stat-week">—</div>
+											<div class="it-stat-sub">new hires</div>
+										</div>
+										<div class="it-stat-chip chip-warn">
+											<div class="it-stat-label">Pending M365</div>
+											<div class="it-stat-value" id="stat-pending-m365">—</div>
+											<div class="it-stat-sub">no profile yet</div>
+										</div>
+										<div class="it-stat-chip chip-warn">
+											<div class="it-stat-label">Pending Email</div>
+											<div class="it-stat-value" id="stat-pending-email">—</div>
+											<div class="it-stat-sub">not sent yet</div>
+										</div>
+									</div>
+
+										<!-- Filters -->
+										<div class="filters-row">
+											<div class="filter-group">
+												<label>Filter by Name</label>
+												<input type="text" id="filterName" class="filter-input" placeholder="Search by name...">
+											</div>
+											<div class="filter-group">
+												<label>Filter by Position</label>
+												<select id="filterPosition" class="filter-input">
+													<option value="">All Positions</option>
+												</select>
+											</div>
+											<div class="filter-group">
+												<label>Filter by Department</label>
+												<select id="filterDepartment" class="filter-input">
+													<option value="">All Departments</option>
+												</select>
+											</div>
+											<div class="filter-group">
+												<label>Filter by Hire Date</label>
+												<select id="filterHireDate" class="filter-input">
+													<option value="">All Dates</option>
+												</select>
+											</div>
+											<div class="filter-group" style="flex: 0 0 auto;">
+												<label>&nbsp;</label>
+												<button id="refreshRecordsBtn" class="btn-refresh" style="width: 100%;">
+													<span class="refresh-icon">&#x21BB;</span> Refresh
+												</button>
+											</div>
+											<div class="filter-group" style="flex: 0 0 auto;">
+												<label>&nbsp;</label>
+												<button id="exportCsvBtn" class="btn-secondary" style="width: 100%;">
+													&#x1F4E5; Export CSV
+												</button>
+											</div>
+										</div>
+
+										<!-- Action Bar (shown when rows selected) -->
+										<div id="recordActionBar" class="record-action-bar" style="display:none;">
+											<span class="selection-count" id="selectionCount">0 selected</span>
+											<button class="btn-action btn-action-m365" id="btnM365Profile">&#x2601; M365 Profile</button>
+											<button class="btn-action btn-action-unifi" id="btnUnifiProfile">&#x1F4E1; UNIFI Account</button>
+											<button class="btn-action btn-action-manager" id="btnAssignManager">&#x1F464; Assign Manager</button>
+											<button class="btn-action btn-action-email" id="btnSendEmail">&#x2709; Welcome Email</button>
+											<button class="btn-action btn-action-station" id="btnAssignStation">&#x1F5A5; Assign Station ID</button>
+											<button class="btn-action" id="btnItEmail">&#x2709; IT Email</button>
+											<button class="btn-action" id="btnLMProfileCSV">&#x1F4CA; LM Profile CSV</button>
+											<button class="btn-action btn-action-delete" id="btnDeleteSelected">&#x1F5D1; Delete</button>
+										</div>
+
+										<div id="recordCount" class="record-count">Loading records...</div>
+
+										<div class="table-container">
+											<table class="data-table" id="recordsTable">
+												<thead>
+													<tr>
+														<th style="width:36px;min-width:36px;"><input type="checkbox" id="selectAllRecords" title="Select all" style="transform:scale(1.15);cursor:pointer;"></th>
+														<th>Full Name</th>
+														<th>Username</th>
+														<th>Hire Date</th>
+														<th>Department</th>
+														<th>Position</th>
+														<th>Location</th>
+														<th>Manager</th>
+														<th>Win/M365 Pwd</th>
+														<th>Five9 User</th>
+														<th>Five9 Pwd</th>
+														<th>Station ID</th>
+														<th>ILOAN</th>
+														<th>FusionID</th>
+														<th>Phone</th>
+														<th>M365 Profile?</th>
+														<th>Unifi?</th>
+														<th>Manager Assigned?</th>
+														<th>Email Sent?</th>
+														<th>Station Assigned?</th>
+														<th>Actions</th>
+													</tr>
+												</thead>
+												<tbody id="recordsTableBody">
+													<tr>
+														<td colspan="21" style="text-align:center;padding:30px;">
+															<div class="loading-spinner"></div> Loading records...
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+
+								<!-- Delete Confirmation Modal -->
+								<div class="modal-overlay" id="deleteModalOverlay"></div>
+								<div class="delete-modal" id="deleteModal">
+									<h3>&#x26A0; Confirm Delete</h3>
+									<p id="deleteModalMsg">Are you sure you want to delete the selected records? This cannot be undone.</p>
+									<div class="delete-modal-actions">
+										<button class="btn-cancel-delete" id="btnCancelDelete">Cancel</button>
+										<button class="btn-confirm-delete" id="btnConfirmDelete">Delete</button>
+									</div>
+								</div>
+
+								<!-- IT Email Modal -->
+								<div class="modal-overlay" id="itEmailModalOverlay"></div>
+								<div class="delete-modal" id="itEmailModal" style="min-width:460px;max-width:620px;width:90vw;">
+									<h3 style="color:var(--fluent-primary);">&#x2709; IT Setup Email</h3>
+									<div style="margin-bottom:10px;">
+										<label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--fluent-text-subtle);margin-bottom:4px;">To</label>
+										<input type="text" id="itEmailTo" placeholder="recipient@company.com" style="width:100%;box-sizing:border-box;" />
+									</div>
+									<div style="margin-bottom:10px;">
+										<label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--fluent-text-subtle);margin-bottom:4px;">Subject</label>
+										<input type="text" id="itEmailSubject" style="width:100%;box-sizing:border-box;" />
+									</div>
+									<div style="margin-bottom:16px;">
+										<label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--fluent-text-subtle);margin-bottom:4px;">Body Preview</label>
+										<textarea id="itEmailBody" readonly style="width:100%;height:220px;box-sizing:border-box;font-family:Consolas,monospace;font-size:11px;line-height:1.5;padding:8px 10px;border:1px solid var(--fluent-border-strong);border-radius:var(--fluent-radius-md);resize:vertical;background:var(--fluent-bg);color:var(--fluent-text);"></textarea>
+									</div>
+									<div id="itEmailCsvContainer" style="margin-bottom:16px;"></div>
+									<div class="delete-modal-actions">
+										<button class="btn-cancel-delete" id="btnItEmailCancel">Cancel</button>
+										<button id="btnItEmailOpen" style="background:linear-gradient(135deg,var(--fluent-primary),#45a9ff);color:#fff;padding:8px 18px;border:none;border-radius:var(--fluent-radius-pill);font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">&#x2709; Open in Email App</button>
+									</div>
+								</div>
+
+								<!-- Save / Update Confirmation Modal -->
+								<div class="modal-overlay" id="singleConfirmOverlay"></div>
+								<div class="delete-modal" id="singleConfirmModal">
+									<h3 style="color:var(--fluent-primary);">&#x2713; Confirm</h3>
+									<p id="singleConfirmMsg" style="font-size:13px;color:var(--fluent-text-subtle);margin:0 0 20px 0;line-height:1.5;">Are you sure?</p>
+									<div class="delete-modal-actions">
+										<button class="btn-cancel-delete" id="btnSingleConfirmCancel">Cancel</button>
+										<button id="btnSingleConfirmOk" style="background:linear-gradient(135deg,var(--fluent-primary),#45a9ff);color:#fff;padding:8px 18px;border:none;border-radius:var(--fluent-radius-pill);font-size:13px;font-weight:600;cursor:pointer;">Confirm</button>
+									</div>
+								</div>
+
+								<div id="statusBox" class="status-box"></div>
+							</div>
+						<script src="app.js"></script>
+						</body>
+					</html>

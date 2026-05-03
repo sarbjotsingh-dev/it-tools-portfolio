@@ -1,0 +1,744 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<style>
+        :root {
+            --f-bg: #f3f2f1; 
+            --f-card: #ffffff; 
+            --f-primary: #0078d4; 
+            --f-text: #201f1e;
+            --f-border: #e1dfdd; 
+            --f-success: #107c10; 
+            --f-danger: #a4262c;
+            --f-warning: #ffb900; 
+            --f-info: #107c10;
+            --f-offboarding: #d13438;
+            --f-onboarding: #107c10;
+        }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: var(--f-bg); 
+            color: var(--f-text); 
+            margin: 20px; 
+        }
+        .card { 
+            background: var(--f-card); 
+            padding: 24px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            border: 1px solid var(--f-border); 
+            max-width: 1400px; 
+            margin: auto; 
+        }
+        
+        /* STATS SECTION - Enhanced for Onboarding/Offboarding */
+        .stats-section { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 15px; 
+            margin-bottom: 20px; 
+        }
+        .stat-card { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            border: 1px solid var(--f-border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .stat-title { 
+            font-size: 12px; 
+            font-weight: 600; 
+            color: #605e5c; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .stat-value { 
+            font-size: 28px; 
+            font-weight: 700; 
+            color: var(--f-primary);
+            margin-bottom: 4px;
+        }
+        .stat-desc { 
+            font-size: 12px; 
+            color: #605e5c; 
+        }
+        
+        /* Onboarding/Offboarding specific stat colors */
+        .stat-onboarding .stat-value { color: var(--f-onboarding); }
+        .stat-offboarding .stat-value { color: var(--f-offboarding); }
+        .stat-rehire .stat-value { color: #ff8c00; }
+        
+        .filter-bar { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr; 
+            gap: 15px; 
+            background: #faf9f8; 
+            padding: 16px; 
+            border-radius: 6px; 
+            margin-bottom: 20px; 
+            border: 1px solid var(--f-border); 
+        }
+        .filter-item { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px; 
+        }
+        .filter-label { 
+            font-size: 11px; 
+            font-weight: 700; 
+            color: #605e5c; 
+            text-transform: uppercase; 
+        }
+        
+        /* Date Filter Styles */
+        .date-filter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .date-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--f-border);
+            border-radius: 4px;
+            background: white;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .date-select:focus {
+            border-color: var(--f-primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+        }
+        .date-filter-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .date-filter-actions button {
+            font-size: 10px;
+            padding: 3px 6px;
+        }
+        .selected-date-info {
+            font-size: 11px;
+            color: var(--f-primary);
+            font-weight: 600;
+        }
+        
+        .tabs { 
+            display: flex; 
+            border-bottom: 1px solid var(--f-border); 
+            margin-bottom: 20px; 
+        }
+        .tab { 
+            padding: 10px 20px; 
+            cursor: pointer; 
+            border-bottom: 3px solid transparent; 
+            font-weight: 600; 
+            color: #605e5c; 
+        }
+        .tab.active { 
+            border-bottom-color: var(--f-primary); 
+            color: var(--f-primary); 
+        }
+        
+        .table-wrap { 
+            max-height: 500px; 
+            overflow: auto; 
+            border: 1px solid var(--f-border); 
+            border-radius: 4px; 
+            position: relative;
+        }
+        .data-table thead th {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(180deg, #f8f9fb, #f3f2f1);
+            z-index: 110;
+        }
+        
+        /* Table Column Widths - Adjusted for new columns */
+        .data-table { 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0;
+            font-size: 12px; 
+            table-layout: fixed;
+        }
+        
+        .data-table th:nth-child(1) { width: 40px; min-width: 40px; } /* Checkbox */
+        .data-table th:nth-child(2) { width: 120px; min-width: 120px; } /* Name */
+        .data-table th:nth-child(3) { width: 100px; min-width: 100px; } /* Department */
+        .data-table th:nth-child(4) { width: 100px; min-width: 100px; } /* Location */
+        .data-table th:nth-child(5) { width: 120px; min-width: 120px; } /* Onboarding Date */
+        .data-table th:nth-child(6) { width: 120px; min-width: 120px; } /* Offboarding Date */
+        .data-table th:nth-child(7) { width: 120px; min-width: 120px; } /* Offboarding Reason */
+        .data-table th:nth-child(8) { width: 100px; min-width: 100px; } /* Position */
+        .data-table th:nth-child(9) { width: 80px; min-width: 80px; } /* Rehire Flag */
+        .data-table th:nth-child(10) { width: 150px; min-width: 150px; } /* Work Email */
+        .data-table th:nth-child(11) { width: 180px; min-width: 180px; } /* Actions */
+        
+        .data-table th { 
+            position: sticky; 
+            top: 0; 
+            background: linear-gradient(180deg, #f8f9fb, #f3f2f1); 
+            z-index: 100; 
+            font-weight: 600; 
+            color: #605e5c; 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.04em; 
+            padding: 8px; 
+            border-bottom: 2px solid var(--f-border);
+            border-right: 1px solid var(--f-border);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .data-table th.sortable { 
+            cursor: pointer; 
+            position: relative;
+            padding-right: 20px !important;
+        }
+        .data-table th.sortable:hover { 
+            background: linear-gradient(180deg, #e8eef8, #e3eaf5) !important;
+        }
+        
+        /* STICKY COLUMNS - Name, Department, Location */
+        .data-table th:nth-child(2) {
+            position: sticky;
+            left: 40px;
+            z-index: 101;
+        }
+        
+        .data-table th:nth-child(3) {
+            position: sticky;
+            left: 160px; /* 40 + 120 */
+            z-index: 101;
+        }
+        
+        .data-table th:nth-child(4) {
+            position: sticky;
+            left: 260px; /* 40 + 120 + 100 */
+            z-index: 101;
+        }
+        
+        /* Sticky cells */
+        .data-table td:nth-child(2) {
+            position: sticky;
+            left: 40px;
+            background: white;
+            z-index: 1;
+            border-right: 1px solid var(--f-border);
+        }
+        
+        .data-table td:nth-child(3) {
+            position: sticky;
+            left: 160px;
+            background: white;
+            z-index: 1;
+            border-right: 1px solid var(--f-border);
+        }
+        
+        .data-table td:nth-child(4) {
+            position: sticky;
+            left: 260px;
+            background: white;
+            z-index: 1;
+            border-right: 1px solid var(--f-border);
+        }
+        
+        /* Fix for alternating row colors on sticky cells */
+        .data-table tr:nth-child(even) td:nth-child(2),
+        .data-table tr:nth-child(even) td:nth-child(3),
+        .data-table tr:nth-child(even) td:nth-child(4) {
+            background-color: #fcfcfc;
+        }
+        
+        .data-table tr:hover td:nth-child(2),
+        .data-table tr:hover td:nth-child(3),
+        .data-table tr:hover td:nth-child(4) {
+            background-color: #f5f8fd;
+        }
+        
+        /* Shadow for last sticky column */
+        .data-table th:nth-child(4),
+        .data-table td:nth-child(4) {
+            box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1);
+        }
+        
+        .sort-indicator {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: var(--f-primary);
+        }
+        .sort-asc .sort-indicator::after { content: "↑"; }
+        .sort-desc .sort-indicator::after { content: "↓"; }
+        
+        .data-table td { 
+            padding: 8px; 
+            border-bottom: 1px solid #f3f2f1; 
+            border-right: 1px solid #f3f2f1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .data-table tr:nth-child(even) { background-color: #fcfcfc; }
+        .data-table tr:hover { background-color: #f5f8fd; }
+        .data-table input[type="checkbox"] { margin: 0; transform: scale(1.1); cursor: pointer; }
+        
+        /* Row highlighting based on status */
+        .onboarding-row { 
+            border-left: 4px solid var(--f-onboarding) !important; 
+        }
+        .offboarding-row { 
+            border-left: 4px solid var(--f-offboarding) !important; 
+        }
+        .rehire-eligible { 
+            background-color: #fff4ce !important; 
+        }
+        
+        /* Highlight missing critical data */
+        .missing-critical { background-color: #ffe6e6 !important; }
+        .existing-row { background-color: #e6f2ff !important; }
+        .edit-row { background-color: #fff8e6 !important; }
+        .duplicate-highlight { background-color: #fff8e6 !important; border-left: 3px solid #ffb900 !important; }
+        
+        /* Input styling */
+        .inline-input { 
+            width: 100%; 
+            padding: 6px 8px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            background: white; 
+            font-size: 12px; 
+            box-sizing: border-box;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .inline-input:focus { 
+            border-color: var(--f-primary); 
+            outline: none; 
+            box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2); 
+        }
+        .read-only { border-color: transparent; background: transparent; }
+        
+        /* CSV Section Styles */
+        .csv-section { 
+            padding: 20px; 
+            background: #faf9f8; 
+            border-radius: 6px; 
+            margin-bottom: 20px; 
+            border: 1px solid var(--f-border); 
+        }
+        .template-section { 
+            background: #eff6fc; 
+            border: 1px solid #c7e0f4; 
+            border-radius: 6px; 
+            padding: 15px; 
+            margin-bottom: 20px; 
+        }
+        .template-section h3 { 
+            font-size: 14px; 
+            font-weight: 600; 
+            margin: 0 0 10px 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+        }
+        .template-section h3::before { content: "📋"; font-size: 14px; }
+        .template-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .template-info { font-size: 12px; color: #605e5c; margin-top: 8px; line-height: 1.4; }
+        .template-info code { 
+            background: rgba(0, 0, 0, 0.05); 
+            padding: 2px 4px; 
+            border-radius: 3px; 
+            font-family: Consolas, monospace; 
+            font-size: 11px; 
+            color: var(--f-primary); 
+        }
+        
+        /* Import Log */
+        #csvLog { 
+            background: #1e1e1e; 
+            color: #00ff00; 
+            font-family: Consolas, monospace; 
+            padding: 12px; 
+            border-radius: 4px; 
+            height: 150px; 
+            overflow-y: auto; 
+            margin-top: 15px; 
+            font-size: 11px; 
+            border: 1px solid #333; 
+            white-space: pre-wrap; 
+        }
+        #csvLog::before { 
+            content: "Import Log"; 
+            display: block; 
+            font-size: 10px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.12em; 
+            color: #9ca3af; 
+            margin-bottom: 8px; 
+        }
+        
+        .btn { 
+            padding: 8px 16px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            border: 1px solid transparent; 
+            transition: 0.2s; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            font-size: 13px; 
+        }
+        .btn-primary { background: var(--f-primary); color: white; }
+        .btn-success { background: var(--f-success); color: white; }
+        .btn-danger { background: var(--f-danger); color: white; }
+        .btn-warning { background: var(--f-warning); color: white; }
+        .btn-outline { background: white; border-color: var(--f-border); color: var(--f-text); }
+        .btn-template { background: linear-gradient(135deg, #10b981, #34d399); color: white; }
+        .btn-export { background: linear-gradient(135deg, #4a6fa5, #3a5a8c); color: white; }
+        
+        .btn-small { padding: 4px 8px; font-size: 11px; }
+        .btn-xs { padding: 2px 6px; font-size: 10px; }
+        
+        .hidden { display: none !important; }
+        .status-box { 
+            padding: 12px; 
+            border-radius: 4px; 
+            display: none; 
+            font-weight: 600; 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            z-index: 100; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+            max-width: 400px; 
+        }
+        .success { background: #dff6dd; color: var(--f-success); border: 1px solid var(--f-success); }
+        .error { background: #fde7e9; color: var(--f-danger); border: 1px solid var(--f-danger); }
+        .warning { background: #fff4ce; color: #8a6d3b; border: 1px solid #faebcc; }
+        
+        #csvSummary { 
+            font-size: 13px; 
+            font-weight: 600; 
+            color: #333; 
+            margin-bottom: 10px; 
+            padding: 8px; 
+            background: #f0f0f0; 
+            border-radius: 4px; 
+        }
+        
+        /* Confirmation box styling */
+        .confirmation-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 1px solid var(--f-border);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            padding: 24px;
+            z-index: 1000;
+            min-width: 400px;
+            max-width: 500px;
+        }
+        .confirmation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        .confirmation-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--f-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .confirmation-title::before {
+            content: "⚠️";
+            font-size: 18px;
+        }
+        .confirmation-message {
+            font-size: 14px;
+            color: #605e5c;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .confirmation-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .clear-field-info {
+            background: #fff8e6;
+            border: 1px solid #ffe6b3;
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #8a6d3b;
+        }
+        .clear-field-info strong {
+            color: #e6a700;
+        }
+    </style>
+	</head>
+	<body>
+		<div class="card">
+			<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+				<h2 style="margin:0;">👥 Onboarding/Offboarding Dashboard</h2>
+				<div style="display:flex; gap:8px;">
+					<button id="btnExportSelected" class="btn btn-export hidden">📥 Export Selected</button>
+					<button id="btnDeleteSelected" class="btn btn-danger hidden">🗑️ Delete Selected</button>
+					<button id="btnRefresh" class="btn btn-outline">🔄 Sync SharePoint</button>
+				</div>
+			</div>
+			<!-- STATISTICS SECTION -->
+			<div id="statsContainer" class="stats-section">
+				<div class="stat-card">
+					<div class="stat-title">Total Records</div>
+					<div class="stat-value" id="totalCount">0</div>
+					<div class="stat-desc">All onboarding/offboarding records</div>
+				</div>
+				<div class="stat-card stat-onboarding">
+					<div class="stat-title">Employed</div>
+					<div class="stat-value" id="onboardingCount">0</div>
+					<div class="stat-desc">No offboarding date</div>
+				</div>
+				<div class="stat-card stat-offboarding">
+					<div class="stat-title">Offboarded</div>
+					<div class="stat-value" id="offboardingCount">0</div>
+					<div class="stat-desc">Has offboarding date</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-title">Onboarding This Month</div>
+					<div class="stat-value" id="onboardingMonthCount">0</div>
+					<div class="stat-desc">Starting this month</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-title">Offboarding This Month</div>
+					<div class="stat-value" id="offboardingMonthCount">0</div>
+					<div class="stat-desc">Leaving this month</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-title">Unique Departments</div>
+					<div class="stat-value" id="uniqueDepartments">0</div>
+					<div class="stat-desc">Distinct department values</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-title">Unique Locations</div>
+					<div class="stat-value" id="uniqueLocations">0</div>
+					<div class="stat-desc">Distinct location values</div>
+				</div>
+				<div class="stat-card stat-rehire">
+					<div class="stat-title">Rehire Eligible</div>
+					<div class="stat-value" id="rehireCount">0</div>
+					<div class="stat-desc">Marked as eligible for rehire</div>
+				</div>
+			</div>
+			<div class="tabs">
+				<div id="tabView" class="tab active">Records View</div>
+				<div id="tabBulk" class="tab">Bulk Import</div>
+			</div>
+			<!-- FILTER SECTION -->
+			<div id="filterContainer" class="filter-bar">
+				<div class="filter-item">
+					<span class="filter-label">Filter by Name</span>
+					<input type="text" id="fName" class="inline-input" placeholder="Search names...">
+					</div>
+					<div class="filter-item">
+						<span class="filter-label">Filter by Department</span>
+						<select id="fDepartment" class="inline-input">
+							<option value="">All Departments</option>
+						</select>
+					</div>
+						<div class="filter-item">
+							<span class="filter-label">Filter by Location</span>
+							<select id="fLocation" class="inline-input">
+								<option value="">All Locations</option>
+							</select>
+						</div>
+							<div class="filter-item">
+								<span class="filter-label">Filter by Position</span>
+								<select id="fPosition" class="inline-input">
+									<option value="">All Positions</option>
+								</select>
+							</div>
+							<div class="filter-item">
+								<span class="filter-label">Filter by Month</span>
+								<select id="fMonth" class="inline-input">
+									<option value="">All Months</option>
+								</select>
+							</div>
+								<div class="filter-item">
+									<div class="date-filter-container">
+										<div style="display: flex; justify-content: space-between; align-items: center;">
+											<span class="filter-label">Filter by Status</span>
+											<button id="btnFindDuplicates" class="btn btn-warning btn-xs">🔍 Find Duplicates</button>
+										</div>
+										<select id="statusFilter" class="date-select">
+											<option value="">All Statuses</option>
+											<option value="employed">Employed</option>
+											<option value="offboarded">Offboarded</option>
+											<option value="rehire">Rehire Eligible</option>
+										</select>
+										<div class="date-filter-actions">
+											<button id="clearStatusFilter" class="btn btn-outline btn-xs">Clear Filter</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- VIEW SECTION -->
+							<div id="viewSection">
+								<div class="table-wrap">
+									<table class="data-table">
+										<thead>
+											<tr>
+												<th>
+													<input type="checkbox" id="selectAll">
+													</th>
+													<th class="sortable" data-sort="Name" data-order="asc">Name <span class="sort-indicator">
+												</span>
+											</th>
+											<th class="sortable" data-sort="department" data-order="asc">Department <span class="sort-indicator">
+										</span>
+									</th>
+									<th class="sortable" data-sort="location" data-order="asc">Location <span class="sort-indicator">
+								</span>
+							</th>
+							<th class="sortable" data-sort="onboardingdate" data-order="asc">Onboarding Date <span class="sort-indicator">
+						</span>
+					</th>
+					<th class="sortable" data-sort="offboardingdate" data-order="asc">Offboarding Date <span class="sort-indicator">
+				</span>
+			</th>
+			<th>Offboarding Reason</th>
+			<th class="sortable" data-sort="position" data-order="asc">Position <span class="sort-indicator">
+		</span>
+	</th>
+	<th>Rehire Flag</th>
+	<th>Work Email</th>
+	<th>Actions</th>
+</tr>
+</thead>
+<tbody id="mainTbody">
+	<!-- Populated by JavaScript -->
+</tbody>
+</table>
+</div>
+</div>
+<!-- BULK IMPORT SECTION -->
+<div id="bulkSection" class="hidden">
+	<!-- Template Download Section -->
+	<div class="template-section">
+		<h3>Download CSV Template</h3>
+		<div class="template-buttons">
+			<button id="templateBtn" class="btn btn-template">📥 Download CSV Template</button>
+		</div>
+		<div class="template-info">
+			<p>
+			<strong>Expected columns (header row, case-insensitive):</strong>
+		</p>
+		<p>
+		<code>Name, Department, Location, OnboardingDate, OffboardingDate, OffboardingReason, Position, RehireFlag, WorkEmail</code>
+	</p>
+	<p>
+	<strong style="color: #a4262c;">⚠️ Name is REQUIRED for all records.</strong>
+</p>
+<p>
+<strong>RehireFlag options:</strong> Yes, No, Pending</p>
+</div>
+</div>
+<div class="csv-section">
+	<div style="margin-bottom: 15px;">
+		<label style="display: block; font-size: 11px; font-weight: 600; color: #605e5c; text-transform: uppercase; margin-bottom: 4px;">
+                        Select CSV File
+                    </label>
+		<input type="file" id="csvFile" accept=".csv" style="width: 100%; padding: 8px; border: 1px solid var(--f-border); border-radius: 4px;">
+		</div>
+		<div id="csvSummary">No CSV file loaded.</div>
+		<div class="table-wrap" style="max-height: 350px; margin-top: 10px;">
+			<table class="data-table">
+				<thead>
+					<tr>
+						<th width="40">#</th>
+						<th width="80">Import?</th>
+						<th width="100">Status</th>
+						<th width="120">Name</th>
+						<th width="100">Department</th>
+						<th width="100">Location</th>
+						<th width="100">Onboarding</th>
+						<th width="100">Offboarding</th>
+						<th width="120">Reason</th>
+						<th width="100">Position</th>
+						<th width="80">Rehire</th>
+						<th width="150">Work Email</th>
+						<th width="120">Actions</th>
+					</tr>
+				</thead>
+				<tbody id="csvPreviewBody">
+				</tbody>
+			</table>
+		</div>
+		<div style="margin-top: 15px;">
+			<button id="btnStart" class="btn btn-success hidden">🚀 Import Selected Rows</button>
+		</div>
+		<pre id="csvLog" class="hidden">
+		</pre>
+	</div>
+</div>
+<!-- Status Box -->
+<div id="statusBox" class="status-box">
+</div>
+<!-- Confirmation Dialog -->
+<div id="confirmationOverlay" class="confirmation-overlay hidden">
+</div>
+<div id="confirmationBox" class="confirmation-box hidden">
+	<div class="confirmation-title">Confirm Clear Record</div>
+	<div class="confirmation-message" id="confirmationMessage">
+                Clear all fields for this record? The Name will be preserved.
+            </div>
+	<div class="clear-field-info">
+		<strong>This will clear:</strong>
+		<div style="margin-top: 4px;">
+                    • Department<br>
+                    • Location<br>
+                    • Onboarding Date<br>
+                    • Offboarding Date<br>
+                    • Offboarding Reason<br>
+                    • Position<br>
+                    • Rehire Flag<br>
+                    • Work Email
+                </div>
+		<div style="margin-top: 8px;">
+			<strong>This will NOT change:</strong>
+			<div style="margin-top: 4px;">• Name</div>
+		</div>
+	</div>
+	<div class="confirmation-buttons">
+		<button id="confirmationCancel" class="btn btn-outline">Cancel</button>
+		<button id="confirmationConfirm" class="btn btn-warning">Clear Record</button>
+	</div>
+</div>
+</div>
+<script src="app.js"></script>
+							</body>
+						</html>

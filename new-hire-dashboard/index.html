@@ -1,0 +1,907 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>New Hires Dashboard</title>
+		<style>
+        :root {
+            --f-bg: #f3f2f1; --f-card: #ffffff; --f-primary: #0078d4; --f-text: #201f1e;
+            --f-border: #e1dfdd; --f-success: #107c10; --f-danger: #a4262c;
+            --f-warning: #ffb900; --f-info: #107c10; --f-purple: #9333ea;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--f-bg); color: var(--f-text); margin: 20px; }
+        .card { background: var(--f-card); padding: 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid var(--f-border); max-width: 1400px; margin: auto; }
+        
+        /* STATS SECTION */
+        .stats-section { 
+            display: grid; 
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px; 
+            margin-bottom: 20px; 
+        }
+        .stat-card { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            border: 1px solid var(--f-border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .stat-title { 
+            font-size: 12px; 
+            font-weight: 600; 
+            color: #605e5c; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .stat-value { 
+            font-size: 28px; 
+            font-weight: 700; 
+            color: var(--f-primary);
+            margin-bottom: 4px;
+        }
+        .stat-desc { 
+            font-size: 12px; 
+            color: #605e5c; 
+        }
+        
+        /* Location details styling */
+        .location-details {
+            font-size: 11px;
+            margin-top: 8px;
+            border-top: 1px dashed #e1dfdd;
+            padding-top: 6px;
+        }
+        .dept-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .dept-item {
+            display: flex;
+            justify-content: space-between;
+            color: #323130;
+        }
+        .dept-name {
+            font-weight: 500;
+        }
+        .pending-info {
+            color: #a4262c;
+            font-weight: 700;
+            font-size: 12px;
+        }
+        .completed-info {
+            color: #107c10;
+        }
+        .filter-bar { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; 
+            gap: 15px; 
+            background: #faf9f8; 
+            padding: 16px; 
+            border-radius: 6px; 
+            margin-bottom: 20px; 
+            border: 1px solid var(--f-border); 
+        }
+        .filter-item { display: flex; flex-direction: column; gap: 4px; }
+        .filter-label { font-size: 11px; font-weight: 700; color: #605e5c; text-transform: uppercase; }
+
+        .filter-summary {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            background: #f0f6ff;
+            border: 1px solid #c7ddf7;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #323130;
+            flex-wrap: wrap;
+        }
+        .filter-summary-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: white;
+            border: 1px solid #c7ddf7;
+            border-radius: 20px;
+            padding: 3px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #323130;
+        }
+        .filter-summary-chip .chip-count {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--f-primary);
+        }
+        .filter-summary-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #605e5c;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-right: 4px;
+        }
+        
+        /* Clear Filters Button Styling */
+        #btnClearFilters {
+            background: #f0f0f0;
+            border-color: #d0d0d0;
+            margin-top: 20px;
+            width: 100%;
+        }
+        #btnClearFilters:hover {
+            background: #e0e0e0;
+            border-color: #b0b0b0;
+            transform: translateY(-1px);
+        }
+        
+        .tabs { display: flex; border-bottom: 1px solid var(--f-border); margin-bottom: 20px; }
+        .tab { padding: 10px 20px; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 600; color: #605e5c; }
+        .tab.active { border-bottom-color: var(--f-primary); color: var(--f-primary); }
+        
+        /* Action buttons container */
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .table-wrap { 
+            max-height: 500px; 
+            overflow-y: auto; 
+            overflow-x: auto;
+            border: 1px solid var(--f-border); 
+            border-radius: 4px; 
+            position: relative;
+        }
+        
+        .data-table { 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0;
+            font-size: 12px; 
+            table-layout: fixed;
+        }
+        
+        .data-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 500;
+            background: linear-gradient(180deg, #f8f9fb, #f3f2f1);
+        }
+        
+        /* Column widths */
+        .data-table th:nth-child(1) { width: 60px; min-width: 60px; }
+        .data-table th:nth-child(2) { width: 120px; min-width: 120px; }
+        .data-table th:nth-child(3) { width: 120px; min-width: 120px; }
+        .data-table th:nth-child(4) { width: 120px; min-width: 120px; }
+        .data-table th:nth-child(5) { width: 150px; min-width: 150px; }
+        .data-table th:nth-child(6) { width: 100px; min-width: 100px; }
+        .data-table th:nth-child(7) { width: 120px; min-width: 120px; }
+        .data-table th:nth-child(8) { width: 100px; min-width: 100px; }
+        .data-table th:nth-child(9) { width: 100px; min-width: 100px; }
+        .data-table th:nth-child(10) { width: 100px; min-width: 100px; }
+        .data-table th:nth-child(11) { width: 120px; min-width: 120px; }
+        .data-table th:nth-child(12) { width: 120px; min-width: 120px; }
+        .data-table th:nth-child(13) { width: 100px; min-width: 100px; }
+        .data-table th:nth-child(14) { width: 100px; min-width: 100px; }
+        .data-table th:nth-child(15) { width: 120px; min-width: 120px; }
+        .data-table th:nth-child(16) { width: 120px; min-width: 120px; }
+        .data-table th:nth-child(17) { width: 150px; min-width: 150px; }
+        .data-table th:nth-child(18) { width: 100px; min-width: 100px; }
+        .data-table th:nth-child(19) { width: 100px; min-width: 100px; }
+        .data-table th:nth-child(20) { width: 100px; min-width: 100px; }
+        .data-table th:nth-child(21) { width: 180px; min-width: 180px; }
+        
+        .data-table th { 
+            position: relative;
+            background: linear-gradient(180deg, #f8f9fb, #f3f2f1); 
+            font-weight: 600; 
+            color: #605e5c; 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.04em; 
+            padding: 8px; 
+            border-bottom: 2px solid var(--f-border);
+            border-right: 1px solid var(--f-border);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .data-table th.sortable { 
+            cursor: pointer; 
+            position: relative;
+            padding-right: 20px !important;
+        }
+        .data-table th.sortable:hover { 
+            background: linear-gradient(180deg, #e8eef8, #e3eaf5) !important;
+        }
+        
+        /* STICKY COLUMNS */
+        .data-table td:nth-child(1) {
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 1;
+            border-right: 1px solid var(--f-border);
+        }
+        
+        .data-table td:nth-child(2) {
+            position: sticky;
+            left: 60px;
+            background: white;
+            z-index: 1;
+            border-right: 1px solid var(--f-border);
+        }
+        
+        .data-table td:nth-child(3) {
+            position: sticky;
+            left: 180px;
+            background: white;
+            z-index: 1;
+            border-right: 1px solid var(--f-border);
+        }
+        
+        .data-table td:nth-child(4) {
+            position: sticky;
+            left: 300px;
+            background: white;
+            z-index: 1;
+            border-right: 1px solid var(--f-border);
+        }
+        
+        .data-table tr:nth-child(even) td:nth-child(1),
+        .data-table tr:nth-child(even) td:nth-child(2),
+        .data-table tr:nth-child(even) td:nth-child(3),
+        .data-table tr:nth-child(even) td:nth-child(4) {
+            background-color: #fcfcfc;
+        }
+        
+        .data-table tr:hover td:nth-child(1),
+        .data-table tr:hover td:nth-child(2),
+        .data-table tr:hover td:nth-child(3),
+        .data-table tr:hover td:nth-child(4) {
+            background-color: #f5f8fd;
+        }
+        
+        .data-table td:nth-child(2),
+        .data-table td:nth-child(3),
+        .data-table td:nth-child(4) {
+            box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1);
+        }
+
+        /* Sticky header cells — must match td left offsets so columns align on horizontal scroll */
+        .data-table thead th:nth-child(1) { position: sticky; left: 0; }
+        .data-table thead th:nth-child(2) { position: sticky; left: 60px; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); }
+        .data-table thead th:nth-child(3) { position: sticky; left: 180px; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); }
+        .data-table thead th:nth-child(4) { position: sticky; left: 300px; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); }
+
+        .sort-indicator {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: var(--f-primary);
+        }
+        .sort-asc .sort-indicator::after { content: "↑"; }
+        .sort-desc .sort-indicator::after { content: "↓"; }
+        
+        .data-table td { 
+            padding: 8px; 
+            border-bottom: 1px solid #f3f2f1; 
+            border-right: 1px solid #f3f2f1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .data-table tr:nth-child(even) { background-color: #fcfcfc; }
+        .data-table tr:hover { background-color: #f5f8fd; }
+        .data-table input[type="checkbox"] { margin: 0; transform: scale(1.1); cursor: pointer; }
+        
+        .serial-number {
+            font-size: 11px;
+            font-weight: 600;
+            color: #605e5c;
+            text-align: center;
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .missing-critical { background-color: #ffe6e6 !important; border-left: 3px solid #ff4d4d !important; }
+        .existing-row { background-color: #e6f2ff !important; }
+        .edit-row { background-color: #fff8e6 !important; }
+        .duplicate-highlight { background-color: #fff8e6 !important; border-left: 3px solid #ffb900 !important; }
+        .duplicate-highlight td { background-color: #fff8e6 !important; }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-badge.pending { background: #fff4ce; color: #8a6d3b; }
+        .status-badge.completed { background: #dff6dd; color: var(--f-success); }
+        
+        .inline-input { 
+            width: 100%; 
+            padding: 6px 8px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            background: white; 
+            font-size: 12px; 
+            box-sizing: border-box;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .inline-input:focus { border-color: var(--f-primary); outline: none; box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2); }
+        .read-only { border-color: transparent; background: transparent; }
+        
+        .csv-section { padding: 20px; background: #faf9f8; border-radius: 6px; margin-bottom: 20px; border: 1px solid var(--f-border); }
+        .template-section { background: #eff6fc; border: 1px solid #c7e0f4; border-radius: 6px; padding: 15px; margin-bottom: 20px; }
+        .template-section h3 { font-size: 14px; font-weight: 600; margin: 0 0 10px 0; display: flex; align-items: center; gap: 6px; }
+        .template-section h3::before { content: "📋"; font-size: 14px; }
+        .template-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .template-info { font-size: 12px; color: #605e5c; margin-top: 8px; line-height: 1.4; }
+        .template-info code { background: rgba(0, 0, 0, 0.05); padding: 2px 4px; border-radius: 3px; font-family: Consolas, monospace; font-size: 11px; color: var(--f-primary); }
+        
+        #csvLog { background: #1e1e1e; color: #00ff00; font-family: Consolas, monospace; padding: 12px; border-radius: 4px; height: 150px; overflow-y: auto; margin-top: 15px; font-size: 11px; border: 1px solid #333; white-space: pre-wrap; }
+        #csvLog::before { content: "Import Log"; display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: #9ca3af; margin-bottom: 8px; }
+        
+        .btn { padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 600; border: 1px solid transparent; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+        .btn-primary { background: var(--f-primary); color: white; }
+        .btn-success { background: var(--f-success); color: white; }
+        .btn-danger { background: var(--f-danger); color: white; }
+        .btn-warning { background: var(--f-warning); color: white; }
+        .btn-outline { background: white; border-color: var(--f-border); color: var(--f-text); }
+        .btn-template-cs { background: linear-gradient(135deg, #0078d4, #005a9e); color: white; }
+        .btn-template-assessment { background: linear-gradient(135deg, #9333ea, #6b21a8); color: white; }
+        .btn-template-collections { background: linear-gradient(135deg, #107c10, #0a5e0a); color: white; }
+        .btn-email { background: linear-gradient(135deg, #9333ea, #7c3aed); color: white; }
+        .btn-folder { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+        .btn-folder:hover { background: linear-gradient(135deg, #d97706, #b45309); transform: translateY(-1px); }
+        .btn-bookings { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
+        .btn-bookings:hover { background: linear-gradient(135deg, #7c3aed, #6d28d9); transform: translateY(-1px); }
+        .btn-push-it { background: linear-gradient(135deg, #0891b2, #0e7490); color: white; }
+        .btn-push-it:hover { background: linear-gradient(135deg, #0e7490, #155e75); transform: translateY(-1px); }
+        .btn-lm-profile { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .btn-lm-profile:hover { background: linear-gradient(135deg, #059669, #047857); transform: translateY(-1px); }
+        
+        .btn-small { padding: 4px 8px; font-size: 11px; }
+        .btn-xs { padding: 2px 6px; font-size: 10px; }
+        
+        .hidden { display: none !important; }
+        .status-box { padding: 12px; border-radius: 4px; display: none; font-weight: 600; position: fixed; bottom: 20px; right: 20px; z-index: 1001; box-shadow: 0 4px 10px rgba(0,0,0,0.2); max-width: 400px; }
+        .success { background: #dff6dd; color: var(--f-success); border: 1px solid var(--f-success); }
+        .error { background: #fde7e9; color: var(--f-danger); border: 1px solid var(--f-danger); }
+        .warning { background: #fff4ce; color: #8a6d3b; border: 1px solid #faebcc; }
+        .info { background: #e1f0fa; color: var(--f-primary); border: 1px solid var(--f-primary); }
+        
+        #csvSummary { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 10px; padding: 8px; background: #f0f0f0; border-radius: 4px; }
+        
+        .confirmation-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 1px solid var(--f-border);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            padding: 24px;
+            z-index: 1000;
+            min-width: 400px;
+            max-width: 500px;
+        }
+        .confirmation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        .confirmation-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--f-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .confirmation-title::before {
+            content: "⚠️";
+            font-size: 18px;
+        }
+        .confirmation-message {
+            font-size: 14px;
+            color: #605e5c;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .confirmation-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .email-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 1px solid var(--f-border);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            padding: 24px;
+            z-index: 1000;
+            min-width: 500px;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .email-modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--f-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .email-modal-title::before {
+            content: "✉️";
+            font-size: 18px;
+        }
+        .email-form-group {
+            margin-bottom: 16px;
+        }
+        .email-form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #605e5c;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+        .email-form-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--f-border);
+            border-radius: 4px;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+        .email-form-input:focus {
+            border-color: var(--f-primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+        }
+        .email-preview {
+            background: #f8f9fa;
+            border: 1px solid var(--f-border);
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 13px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .email-note {
+            background: #f0f7ff;
+            border: 1px solid #c7e0f4;
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 12px;
+            color: #605e5c;
+            margin-bottom: 16px;
+        }
+        .email-note strong {
+            color: var(--f-primary);
+        }
+        .email-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .csv-download-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        .csv-download-link:hover {
+            background: linear-gradient(135deg, #0da271, #2bb584);
+            transform: translateY(-2px);
+        }
+        
+        .department-badge, .location-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin: 2px;
+        }
+        .department-badge.csr { background: #dbeafe; color: #1e40af; }
+        .department-badge.management { background: #f3e8ff; color: #6b21a8; }
+        .department-badge.it { background: #dcfce7; color: #166534; }
+        .department-badge.hr { background: #fef3c7; color: #92400e; }
+        .department-badge.collections { background: #fce7f3; color: #9d174d; }
+        .department-badge.customer-service { background: #e0f2fe; color: #0369a1; }
+        .department-badge.assessment { background: #f0f9ff; color: #0c4a6e; }
+        .department-badge.foundever { background: #fce7f3; color: #9d174d; }
+        .department-badge.tier1-csr { background: #f0f9ff; color: #0c4a6e; }
+        .location-badge.office { background: #e0e7ff; color: #3730a3; }
+        .location-badge.remote { background: #f1f5f9; color: #475569; }
+        .location-badge.bignewton { background: #dcfce7; color: #166534; }
+        .location-badge.cape-town { background: #fef3c7; color: #92400e; }
+        .location-badge.mumbai { background: #fce7f3; color: #9d174d; }
+        .location-badge.cebu { background: #dbeafe; color: #1e40af; }
+        .location-badge.legazpi { background: #dcfce7; color: #166534; }
+        .location-badge.silang { background: #f3e8ff; color: #6b21a8; }
+        .location-badge.little-newton { background: #e0f2fe; color: #0369a1; }
+        .location-badge.north-vancouver { background: #f3e8ff; color: #6b21a8; }
+        .location-badge.bengaluru { background: #fef3c7; color: #92400e; }
+        
+        .csv-preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+        .csv-preview-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #605e5c;
+            padding: 6px 8px;
+            border: 1px solid #e1dfdd;
+            text-align: left;
+            position: relative;
+        }
+        .csv-preview-table td {
+            padding: 6px 8px;
+            border: 1px solid #e1dfdd;
+            vertical-align: top;
+        }
+        .auto-gen-info {
+            font-size: 10px;
+            color: #666;
+            margin-top: 4px;
+            font-style: italic;
+        }
+        .select-all-header {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .select-all-header input {
+            margin: 0;
+        }
+    </style>
+	</head>
+	<body>
+		<div class="card">
+			<!-- Header with title and refresh/load buttons -->
+			<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+				<h2 style="margin:0;">📋 New Hires Dashboard</h2>
+				<div style="display:flex; gap:8px;">
+					<button id="btnManualLoad" type="button" class="btn btn-outline">📥 Load Data</button>
+					<button id="btnRefresh" type="button" class="btn btn-outline">🔄 Refresh Data</button>
+				</div>
+			</div>
+			<!-- STATISTICS SECTION -->
+			<div id="statsContainer" class="stats-section">
+				<div class="stat-card">
+					<div class="stat-title">Total New Hires</div>
+					<div class="stat-value" id="totalCount">0</div>
+					<div class="stat-desc">Active records (Pending/Completed)</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-title">This Month</div>
+					<div class="stat-value" id="monthCount">0</div>
+					<div class="stat-desc">Hired in current month</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-title">Active Departments</div>
+					<div class="stat-value" id="deptCount">0</div>
+					<div class="stat-desc">Total departments</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-title">Completed</div>
+					<div class="stat-value" id="completedCount">0</div>
+					<div class="stat-desc">Setup completed</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-title">Pending</div>
+					<div class="stat-value" id="pendingCount">0</div>
+					<div class="stat-desc">Awaiting setup</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-title">Active Locations</div>
+					<div class="stat-value" id="locationCount">0</div>
+					<div class="stat-desc">Total locations</div>
+				</div>
+			</div>
+			<!-- Department Statistics -->
+			<div style="margin-bottom: 15px;">
+				<h3 style="margin: 0 0 10px 0; font-size: 16px; color: var(--f-primary);">🏢 Department Summary</h3>
+			</div>
+			<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 30px;">
+				<div class="stat-card">
+					<div class="stat-title">Customer Service</div>
+					<div class="stat-value" id="csCount">0</div>
+					<div class="stat-desc">Total agents</div>
+					<div class="location-details" id="csDetails">
+					</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-title">Assessment</div>
+					<div class="stat-value" id="assessmentCount">0</div>
+					<div class="stat-desc">Total agents</div>
+					<div class="location-details" id="assessmentDetails">
+					</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-title">Collections</div>
+					<div class="stat-value" id="collectionsCount">0</div>
+					<div class="stat-desc">Total agents</div>
+					<div class="location-details" id="collectionsDetails">
+					</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-title">IT</div>
+					<div class="stat-value" id="itCount">0</div>
+					<div class="stat-desc">Total agents</div>
+					<div class="location-details" id="itDetails">
+					</div>
+				</div>
+			</div>
+			<!-- Location Statistics with Detailed Breakdown -->
+			<div style="margin-bottom: 15px;">
+				<h3 style="margin: 0 0 10px 0; font-size: 16px; color: var(--f-primary);">📍 Location Summary</h3>
+			</div>
+			<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 20px;" id="locationStatsContainer">
+				<!-- Dynamically populated -->
+			</div>
+			<!-- Tabs -->
+			<div class="tabs">
+				<div id="tabView" class="tab active" role="tab" aria-selected="true" tabindex="0">📊 Records View</div>
+				<div id="tabBulk" class="tab" role="tab" aria-selected="false" tabindex="0">📁 Bulk Import</div>
+			</div>
+			<!-- Action buttons (appear when items are selected) -->
+			<div class="action-buttons" id="actionButtonContainer">
+				<button id="btnEmailSelected" type="button" class="btn btn-email hidden">✉️ Email Selected</button>
+				<button id="btnMarkCompleted" type="button" class="btn btn-success hidden">✓ Mark Completed</button>
+				<button id="btnCreateFolders" type="button" class="btn btn-folder hidden">📁 Create Folders</button>
+				<button id="btnCreateBookings" type="button" class="btn btn-bookings hidden">📅 Create Bookings Profile</button>
+				<button id="btnPushToIT" type="button" class="btn btn-push-it hidden">📤 Push to IT List</button>
+				<button id="btnLMProfileCSV" type="button" class="btn btn-lm-profile hidden">📊 LM Profile CSV</button>
+				<button id="btnDeleteSelected" type="button" class="btn btn-danger hidden">🗑️ Delete Selected</button>
+			</div>
+			<!-- FILTER BAR -->
+			<div id="filterContainer" class="filter-bar">
+				<div class="filter-item">
+					<label class="filter-label" for="fName">Search by Name</label>
+					<input type="text" id="fName" class="inline-input" placeholder="Employee Name...">
+				</div>
+				<div class="filter-item">
+					<label class="filter-label" for="fDept">Filter by Department</label>
+					<select id="fDept" class="inline-input">
+						<option value="">All Departments</option>
+					</select>
+				</div>
+				<div class="filter-item">
+					<label class="filter-label" for="fLocation">Filter by Location</label>
+					<select id="fLocation" class="inline-input">
+						<option value="">All Locations</option>
+					</select>
+				</div>
+				<div class="filter-item">
+					<label class="filter-label" for="fHireDate">Filter by Hire Date</label>
+					<select id="fHireDate" class="inline-input">
+						<option value="">All Hire Dates</option>
+					</select>
+				</div>
+				<div class="filter-item">
+					<label class="filter-label" for="fStatus">Filter by Status</label>
+					<select id="fStatus" class="inline-input">
+						<option value="pending" selected>Pending Only</option>
+						<option value="all">All Status</option>
+						<option value="completed">Completed</option>
+					</select>
+				</div>
+				<div class="filter-item">
+					<span class="filter-label" aria-hidden="true">&nbsp;</span>
+					<button id="btnClearFilters" type="button" class="btn btn-outline">🗑️ Clear All Filters</button>
+				</div>
+			</div>
+			<!-- FILTER SUMMARY -->
+			<div id="filterSummary" class="filter-summary hidden">
+				<span class="filter-summary-label">Currently Hiring</span>
+				<span class="filter-summary-chip">
+					<span class="chip-count" id="fSummaryRecords">0</span> pending
+				</span>
+				<span class="filter-summary-chip">
+					<span class="chip-count" id="fSummaryDepts">0</span> department<span id="fSummaryDeptsPlural">s</span>
+				</span>
+				<span class="filter-summary-chip">
+					<span class="chip-count" id="fSummaryPositions">0</span> position<span id="fSummaryPositionsPlural">s</span>
+				</span>
+			</div>
+			<!-- RECORDS VIEW -->
+			<div id="viewSection">
+				<div class="table-wrap">
+					<table class="data-table">
+						<thead>
+							<tr>
+								<th>
+									<input type="checkbox" id="selectAll">
+									<span style="display:block; font-size:10px; margin-top:4px;">#</span>
+								</th>
+								<th class="sortable" data-sort="employeename" data-order="asc">Employee Name <span class="sort-indicator"></span></th>
+								<th class="sortable" data-sort="firstname" data-order="asc">First Name <span class="sort-indicator"></span></th>
+								<th class="sortable" data-sort="lastname" data-order="asc">Last Name <span class="sort-indicator"></span></th>
+								<th>M365 Username</th>
+								<th>Password</th>
+								<th>Five9 Username</th>
+								<th>Five9 Password</th>
+								<th>Five9 Station ID</th>
+								<th>ILOAN ID</th>
+								<th>Department</th>
+								<th>Position</th>
+								<th class="sortable" data-sort="hiredate" data-order="desc">Hire Date <span class="sort-indicator"></span></th>
+								<th>Location</th>
+								<th>Manager</th>
+								<th>Phone Number</th>
+								<th>External Email</th>
+								<th>Create Folder</th>
+								<th>PWPS Bookings</th>
+								<th class="sortable" data-sort="statusofnewhire" data-order="asc">Status <span class="sort-indicator"></span></th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody id="mainTbody"></tbody>
+					</table>
+				</div>
+			</div>
+			<!-- BULK IMPORT SECTION -->
+			<div id="bulkSection" class="hidden">
+				<!-- Template Download Section with 3 Templates -->
+				<div class="template-section">
+					<h3>Download Department-Specific CSV Templates</h3>
+					<div class="template-buttons">
+						<button id="templateCSCSV" type="button" class="btn btn-template-cs">📥 Customer Service Template</button>
+						<button id="templateAssessmentCSV" type="button" class="btn btn-template-assessment">📥 Assessment Template</button>
+						<button id="templateCollectionsCSV" type="button" class="btn btn-template-collections">📥 Collections Template</button>
+					</div>
+					<div class="template-info">
+						<p><strong>Required columns:</strong> Name, Location, Position, Department, Phone Number, External Email, Hire Date, Manager</p>
+						<p><strong>Note:</strong> Phone numbers will be auto-formatted with correct country codes based on location.</p>
+						<p><strong>CSV Upload:</strong> Accepted column headers (case-insensitive, spaces ignored): <code>Name</code>, <code>Location</code>, <code>Position</code> or <code>Job Title</code>, <code>Department</code>, <code>Phone Number</code>, <code>External Email</code>, <code>Hire Date</code>, <code>Manager</code>.</p>
+					</div>
+				</div>
+				<div class="csv-section">
+					<div style="margin-bottom: 15px;">
+						<label style="display: block; font-size: 11px; font-weight: 600; color: #605e5c; text-transform: uppercase; margin-bottom: 4px;">Select CSV File</label>
+						<input type="file" id="csvFile" accept=".csv" style="width: 100%; padding: 8px; border: 1px solid var(--f-border); border-radius: 4px;">
+					</div>
+					<div id="csvSummary">No CSV file loaded.</div>
+					<div class="table-wrap" style="max-height: 350px; margin-top: 10px;">
+						<table class="data-table csv-preview-table">
+							<thead>
+								<tr>
+									<th width="40">#</th>
+									<th width="80">
+										<div class="select-all-header">
+											<input type="checkbox" id="selectAllCsv">
+											<span>Import?</span>
+										</div>
+									</th>
+									<th width="100">Status</th>
+									<th width="120">Full name</th>
+									<th width="100">Location</th>
+									<th width="100">Department</th>
+									<th width="120">Position</th>
+									<th width="120">Phone Number</th>
+									<th width="120">External Email</th>
+									<th width="100">Hire Date</th>
+									<th width="120">Manager</th>
+									<th width="150">Auto-Generated Fields</th>
+									<th width="100">Actions</th>
+								</tr>
+							</thead>
+							<tbody id="csvPreviewBody"></tbody>
+						</table>
+					</div>
+					<div style="margin-top: 15px; display: flex; gap: 10px; align-items: center;">
+						<button id="btnSelectAllValid" type="button" class="btn btn-outline btn-small">✓ Select All Valid</button>
+						<button id="btnDeselectAll" type="button" class="btn btn-outline btn-small">✗ Deselect All</button>
+						<button id="btnStart" type="button" class="btn btn-success hidden">🚀 Import Selected Rows</button>
+					</div>
+					<pre id="csvLog" class="hidden"></pre>
+				</div>
+			</div>
+		</div>
+		<!-- Status Messages -->
+		<div id="statusBox" class="status-box"></div>
+		<!-- Confirmation Dialog -->
+		<div id="confirmationOverlay" class="confirmation-overlay hidden"></div>
+		<div id="confirmationBox" class="confirmation-box hidden" role="dialog" aria-modal="true" aria-labelledby="confirmationTitle">
+			<div class="confirmation-title" id="confirmationTitle">Confirm Delete Record</div>
+			<div class="confirmation-message" id="confirmationMessage">Are you sure you want to delete this new hire record? This action cannot be undone.</div>
+			<div class="confirmation-buttons">
+				<button id="confirmationCancel" type="button" class="btn btn-outline">Cancel</button>
+				<button id="confirmationConfirm" type="button" class="btn btn-danger">Delete Record</button>
+			</div>
+		</div>
+		<!-- Email Modal -->
+		<div id="emailOverlay" class="confirmation-overlay hidden"></div>
+		<div id="emailModal" class="email-modal hidden" role="dialog" aria-modal="true" aria-labelledby="emailModalTitle">
+			<div class="email-modal-title" id="emailModalTitle">Email New Hire Information</div>
+			<div class="email-note"><strong>Note:</strong> This will open your default email client with a pre-filled email containing new hire information.</div>
+			<div class="email-form-group">
+				<label class="email-form-label" for="emailTo">To (comma-separated)</label>
+				<input type="text" id="emailTo" class="email-form-input" placeholder="hr@company.com, manager@company.com" value="">
+			</div>
+			<div class="email-form-group">
+				<label class="email-form-label" for="emailSubject">Subject</label>
+				<input type="text" id="emailSubject" class="email-form-input" value="New Hire IT Setup - [Department] - [Location] - [Hire Date]">
+			</div>
+			<div class="email-form-group">
+				<label class="email-form-label">Email Body Preview</label>
+				<div class="email-preview" id="emailBodyPreview"></div>
+			</div>
+			<div class="email-form-group">
+				<label class="email-form-label">CSV Download</label>
+				<div id="csvDownloadContainer"></div>
+			</div>
+			<div class="email-buttons">
+				<button id="emailCancel" type="button" class="btn btn-outline">Cancel</button>
+				<button id="emailOpen" type="button" class="btn btn-email">Open in Email Client</button>
+			</div>
+		</div>
+		<!-- Duplicate Alert Modal -->
+		<div id="dupAlertOverlay" class="confirmation-overlay hidden"></div>
+		<div id="dupAlertModal" class="email-modal hidden" role="dialog" aria-modal="true" aria-labelledby="dupAlertTitle" style="max-width:660px;">
+			<div class="email-modal-title" id="dupAlertTitle" style="color:#a4262c;">Duplicate Names Found</div>
+			<p style="font-size:13px;color:#605e5c;margin:0 0 12px 0;line-height:1.5;">
+				The following names from your CSV already exist in the system.
+				<strong>By default, these rows are not selected for import.</strong>
+				If these are <strong>rehires</strong>, <strong style="color:#a4262c;">kindly reach out to IT to make sure they are removed from the NLE list before proceeding.</strong>
+			</p>
+			<p style="font-size:13px;color:#605e5c;margin:0 0 16px 0;line-height:1.5;border-left:3px solid #d83b01;padding-left:10px;">
+				<strong>Note:</strong> If a duplicate is actually a <em>different person</em> with the same name, kindly ask the employee to provide a different last name, or reach out to IT for further information.
+			</p>
+			<div id="dupAlertTable" style="overflow-x:auto;margin-bottom:16px;border:1px solid #edebe9;border-radius:4px;"></div>
+			<div class="email-buttons">
+				<button id="dupAlertOk" type="button" class="btn btn-primary">OK, Continue</button>
+			</div>
+		</div>
+		<script src="app.js"></script>
+	</body>
+</html>

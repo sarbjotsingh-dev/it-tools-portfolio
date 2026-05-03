@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Admin</title>
+  <style>
+    :root {
+      --primary : #0078d4;
+      --success : #107c10;
+      --warn    : #d83b01;
+      --bg      : #f3f2f1;
+      --card    : #ffffff;
+      --border  : #e1dfdd;
+      --text    : #201f1e;
+      --muted   : #605e5c;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px;
+    }
+
+    /* ── Layout ── */
+    #admin-root {
+      max-width: 1360px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.07);
+    }
+    .header { margin-bottom: 20px; }
+    .header h1 { font-size: 26px; color: var(--primary); }
+    .header p  { margin-top: 4px; color: var(--muted); font-size: 14px; }
+
+    /* ── Tabs ── */
+    .tab-nav {
+      display: flex;
+      gap: 4px;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      margin-bottom: -2px;
+      border-radius: 4px 4px 0 0;
+    }
+    .tab-btn:hover  { background: #f3f2f1; color: var(--text); }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: none; }
+
+    /* ── Sections ── */
+    .section {
+      margin-top: 22px;
+      padding: 18px;
+      background: #faf9f8;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .section h2 {
+      font-size: 16px;
+      color: var(--text);
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+    }
+
+    /* ── Forms ── */
+    .form-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    input[type="text"], input[type="date"], select, textarea {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-family: inherit;
+      font-size: 13px;
+      background: #fff;
+      outline: none;
+    }
+    input[type="text"]:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0,120,212,.12);
+    }
+
+    /* ── Buttons ── */
+    button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    button:hover { filter: brightness(.92); }
+    .btn-sm     { padding: 5px 10px; font-size: 12px; }
+    .btn-ok     { background: var(--success); }
+    .btn-warn   { background: var(--warn); }
+    .btn-danger { background: #c50f1f; }
+    .btn-group  { display: flex; gap: 6px; flex-shrink: 0; }
+
+    /* ── Lists ── */
+    .item-list  { display: flex; flex-direction: column; gap: 6px; }
+    .list-item  {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      gap: 10px;
+    }
+    .item-dim   { opacity: .55; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      background: #eff6fc;
+      color: var(--primary);
+    }
+    .badge-active { background: #dff6dd; color: var(--success); }
+    .badge-draft  { background: #fef0cd; color: #7a5c00; }
+    .key-badge    { font-size: 11px; color: var(--muted); background: #f3f2f1; border-radius: 4px; padding: 1px 6px; margin-left: 6px; }
+
+    /* ── Options chips (question list) ── */
+    .opt-chip {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      background: #f3f2f1;
+      border: 1px solid var(--border);
+      margin-right: 4px;
+    }
+    .opt-correct { background: #dff6dd; border-color: #107c10; color: #107c10; font-weight: 700; }
+
+    /* ── Info bar ── */
+    .info-bar {
+      padding: 8px 12px;
+      background: #eff6fc;
+      border: 1px solid #c7e0f4;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #004578;
+    }
+
+    /* ── Link box ── */
+    .link-box {
+      padding: 14px 16px;
+      background: #dff6dd;
+      border: 1px solid #92c5f0;
+      border-radius: 8px;
+    }
+
+    /* ── Stats ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 18px 0;
+    }
+    .stat {
+      background: #faf9f8;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 700; }
+    .stat-val { font-size: 28px; font-weight: 700; color: var(--primary); margin-top: 6px; }
+
+    /* ── Tables ── */
+    .table-wrap {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: auto;
+      max-height: 380px;
+      background: #fff;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th {
+      position: sticky; top: 0; z-index: 2;
+      background: linear-gradient(180deg,#f8f9fb,#f3f2f1);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      text-align: left;
+    }
+    tbody td { padding: 10px 12px; border-bottom: 1px solid #f3f2f1; vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) { background: #fcfcfc; }
+
+    /* ── Utilities ── */
+    .muted   { color: var(--muted); }
+    .small   { font-size: 12px; }
+    .tc      { text-align: center; padding: 20px !important; }
+    .pass    { color: var(--success); font-weight: 600; }
+    .fail    { color: var(--warn);    font-weight: 600; }
+    .loading-msg { padding: 20px; }
+    .error   { color: var(--warn); padding: 12px; background: #fde7e9; border-radius: 6px; }
+
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+      body { padding: 10px; }
+      #admin-root { padding: 14px; }
+    }
+    @media (max-width: 560px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .form-row { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- UPDATE data-agent-url to match where the agent quiz page lives in your SharePoint -->
+  <div id="admin-root"
+    data-agent-url="https://your-tenant.sharepoint.com/SitePages/AgentQuiz.aspx">
+    <p class="muted loading-msg">Loading Quiz Admin…</p>
+  </div>
+
+  <script src="quiz.js"></script>
+
+</body>
+</html>
