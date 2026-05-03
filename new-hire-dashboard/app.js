@@ -3,7 +3,7 @@
     const IT_SITE_URL = "https://your-tenant.sharepoint.com/sites/IT-HelpDesk";
     const IT_LIST_GUID = "cdaec9e6-00e2-441c-8e69-e1d80fe8d148";
     // Prefer current site URL from SharePoint context to avoid cross-site issues in modern pages
-    const SITE_URL = (window.PWPS_SITE_URL) || (window._spPageContextInfo && window._spPageContextInfo.webAbsoluteUrl)
+    const SITE_URL = (window.COMPANY_SITE_URL) || (window._spPageContextInfo && window._spPageContextInfo.webAbsoluteUrl)
         || (function() {
             try {
                 const p = location.pathname.toLowerCase();
@@ -884,7 +884,7 @@ James Wilson,Mumbai,Collections Agent,Collections,11234567890,james.wilson@compa
         const recordsToUpdate = [];
         for(let id of selectedIds) {
             const record = masterData.find(item => item.Id === id);
-            if (record && record.PWPSBookings !== "Yes") {
+            if (record && record.CompanyBookings !== "Yes") {
                 recordsToUpdate.push({ id, record });
             }
         }
@@ -913,11 +913,11 @@ James Wilson,Mumbai,Collections Agent,Collections,11234567890,james.wilson@compa
                         "IF-MATCH": "*"
                     },
                     credentials: 'same-origin',
-                    body: JSON.stringify({ PWPSBookings: "Yes" })
+                    body: JSON.stringify({ CompanyBookings: "Yes" })
                 });
 
                 if (resp.ok) {
-                    record.PWPSBookings = "Yes";
+                    record.CompanyBookings = "Yes";
                     updated++;
                 } else {
                     failed++;
@@ -1219,7 +1219,7 @@ James Wilson,Mumbai,Collections Agent,Collections,11234567890,james.wilson@compa
 
     async function loadData() {
         try {
-            const r = await fetch(`${SITE_URL}/_api/web/lists(guid'${LIST_GUID}')/items?$select=Id,EmployeeName,FirstName,LastName,M365Username_x002f_Computerusern,Windows_x002f_M365Password,Five9Username,Five9Password,Five9StationID,ILOANID,Department,Position,HireDate,Location,Manager,PhoneNumber,ExternalEmail,StatusOfNewHire,CreateFolder,PWPSBookings&$top=5000`, { 
+            const r = await fetch(`${SITE_URL}/_api/web/lists(guid'${LIST_GUID}')/items?$select=Id,EmployeeName,FirstName,LastName,M365Username_x002f_Computerusern,Windows_x002f_M365Password,Five9Username,Five9Password,Five9StationID,ILOANID,Department,Position,HireDate,Location,Manager,PhoneNumber,ExternalEmail,StatusOfNewHire,CreateFolder,CompanyBookings&$top=5000`, { 
                 headers: { "Accept": "application/json;odata=nometadata" },
                 credentials: 'same-origin'
             });
@@ -1605,7 +1605,7 @@ James Wilson,Mumbai,Collections Agent,Collections,11234567890,james.wilson@compa
             ExternalEmail: externalEmail,
             StatusOfNewHire: "Pending",
             CreateFolder: null,
-            PWPSBookings: null
+            CompanyBookings: null
         };
     }
 
@@ -2059,7 +2059,7 @@ James Wilson,Mumbai,Collections Agent,Collections,11234567890,james.wilson@compa
         document.getElementById('mainTbody').innerHTML = sortedData.map((i, index) => {
             const status = i.StatusOfNewHire || 'Pending';
             const createFolder = i.CreateFolder || '';
-            const pwpsBookings = i.PWPSBookings || '';
+            const CompanyBookings = i.CompanyBookings || '';
             
             return `
                 <tr data-id="${i.Id}">
@@ -2122,9 +2122,9 @@ James Wilson,Mumbai,Collections Agent,Collections,11234567890,james.wilson@compa
                         </select>
                     </td>
                     <td>
-                        <select class="inline-input s-pwpsbookings" disabled>
-                            <option value="" ${pwpsBookings === '' ? 'selected' : ''}>No</option>
-                            <option value="Yes" ${pwpsBookings === 'Yes' ? 'selected' : ''}>Yes</option>
+                        <select class="inline-input s-CompanyBookings" disabled>
+                            <option value="" ${CompanyBookings === '' ? 'selected' : ''}>No</option>
+                            <option value="Yes" ${CompanyBookings === 'Yes' ? 'selected' : ''}>Yes</option>
                         </select>
                     </td>
                     <td>
@@ -2222,7 +2222,7 @@ James Wilson,Mumbai,Collections Agent,Collections,11234567890,james.wilson@compa
                     PhoneNumber: tr.querySelector('td:nth-child(16) .inline-input').value.trim(),
                     ExternalEmail: tr.querySelector('td:nth-child(17) .inline-input').value.trim(),
                     CreateFolder: tr.querySelector('td:nth-child(18) select').value,
-                    PWPSBookings: tr.querySelector('td:nth-child(19) select').value,
+                    CompanyBookings: tr.querySelector('td:nth-child(19) select').value,
                     StatusOfNewHire: tr.querySelector('td:nth-child(20) select').value
                 };
                 
